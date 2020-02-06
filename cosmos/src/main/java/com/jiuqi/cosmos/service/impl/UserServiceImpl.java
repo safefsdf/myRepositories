@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean createUser(User user) {
+		System.out.println("sdf");
 		return userDao.createUser(user);
 	}
 

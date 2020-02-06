@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mapper:根标签，namespace：命名空间，随便写，一般保证命名空间唯一 -->
+<mapper namespace="com.jiuqi.cosmos.dao.UserDao">
+	<insert id="createUser" parameterType="User">
+	<!-- 有默认值的需要存入对应的默认值：昵称，个性签名，头像，封面 -->
+		insert into tb_user
+		values(null,#{phone},#{password},#{answer},'随风飘摇', '人生不是在吃就是在去吃的路上', null,now(),null,null)
+	</insert>
+
+	<!-- 根据id只查询相应的数据 -->
+	<select id="getByPhone" resultType="User">
+		select * from tb_user where phone=#{phone}
+	</select>
+	<select id="quaryByPhoneAndPassword" resultType="User">
+		select * from tb_user where phone = #{phone} and password = #{password}
+	</select>
+	<select id="getAll" resultType="User">
+		select * from tb_user
+	</select>
+		<!-- 根据id只查询相应的数据 -->
+	<select id="getById" resultType="User">
+		select * from tb_user where userid=#{userid}
+	</select>
+</mapper>
