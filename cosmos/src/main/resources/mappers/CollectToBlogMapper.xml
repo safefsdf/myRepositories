@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuqi.cosmos.dao.CollectToBlogMapper">
+	<resultMap id="BaseResultMap"
+		type="com.jiuqi.cosmos.entity.CollectToBlog">
+		<id column="collect_id" jdbcType="INTEGER" property="collectId" />
+		<result column="blog_id" jdbcType="INTEGER" property="blogId" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="collect_status" jdbcType="INTEGER"
+			property="collectStatus" />
+	</resultMap>
+	<resultMap id="UserBlogResultMap" type="com.jiuqi.cosmos.pojo.UserInfoDTO">
+		<result column="blog_id" jdbcType="INTEGER" property="blogId" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="nickname" jdbcType="VARCHAR" property="nickname" />
+	    <result column="headimg" jdbcType="VARCHAR" property="headimg" />
+	    <result column="coverimg" jdbcType="VARCHAR" property="coverimg" />
+	    <result column="focusCount" jdbcType="INTEGER" property="focusCount" />
+	    <result column="signature" jdbcType="LONGVARCHAR" property="signature" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from tb_collect
+		where collect_id = #{collectId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.jiuqi.cosmos.entity.CollectToBlog">
+		insert into tb_collect (collect_id, blog_id, user_id,
+		collect_status)
+		values (#{collectId,jdbcType=INTEGER}, #{blogId,jdbcType=INTEGER},
+		#{userId,jdbcType=INTEGER},
+		#{collectStatus,jdbcType=INTEGER})
+	</insert>
+	<update id="updateByblogAndUser"
+		parameterType="com.jiuqi.cosmos.entity.CollectToBlog">
+		update tb_collect
+		set collect_status = #{collectStatus,jdbcType=INTEGER}
+		where blog_id = #{blogId,jdbcType=INTEGER} and user_id =
+		#{userId,jdbcType=INTEGER}
+	</update>
+	<select id="selectByBlogAndUser"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select collect_id, blog_id, user_id, collect_status
+		from tb_collect
+		where blog_id = #{blogId,jdbcType=INTEGER} and user_id =
+		#{userId,jdbcType=INTEGER}
+	</select>
+	<select id="selectAllByBlogId" resultMap="UserBlogResultMap" parameterType="java.lang.Integer">
+		SELECT
+			u.user_id,
+			c.blog_id,
+			u.nickname,
+			u.signature,
+			u.headimg,
+			u.coverimg,
+			u.focusCount
+		FROM
+			tb_user AS u
+			LEFT JOIN tb_collect AS c ON u.user_id = c.user_id
+		WHERE
+			c.blog_id = #{blogId,jdbcType=INTEGER}
+	</select>
+	
+	
+</mapper>

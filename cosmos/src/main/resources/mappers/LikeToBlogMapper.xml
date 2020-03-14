@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuqi.cosmos.dao.LikeToBlogMapper">
+	<resultMap id="BaseResultMap"
+		type="com.jiuqi.cosmos.entity.LikeToBlog">
+		<id column="like_id" jdbcType="INTEGER" property="likeId" />
+		<result column="blog_id" jdbcType="INTEGER" property="blogId" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="like_status" jdbcType="INTEGER"
+			property="likeStatus" />
+	</resultMap>
+	<resultMap id="UserBlogResultMap" type="com.jiuqi.cosmos.pojo.UserInfoDTO">
+		<result column="blog_id" jdbcType="INTEGER" property="blogId" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="nickname" jdbcType="VARCHAR" property="nickname" />
+	    <result column="headimg" jdbcType="VARCHAR" property="headimg" />
+	    <result column="coverimg" jdbcType="VARCHAR" property="coverimg" />
+	    <result column="focusCount" jdbcType="INTEGER" property="focusCount" />
+	    <result column="signature" jdbcType="LONGVARCHAR" property="signature" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from tb_like
+		where like_id = #{likeId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert"
+		parameterType="com.jiuqi.cosmos.entity.LikeToBlog">
+		insert into tb_like (like_id, blog_id, user_id,
+		like_status)
+		values (#{likeId,jdbcType=INTEGER}, #{blogId,jdbcType=INTEGER},
+		#{userId,jdbcType=INTEGER},
+		#{likeStatus,jdbcType=INTEGER})
+	</insert>
+	<update id="updateByPrimaryKey"
+		parameterType="com.jiuqi.cosmos.entity.LikeToBlog">
+		update tb_like
+		set like_status = #{likeStatus,jdbcType=INTEGER}
+		where blog_id = #{blogId,jdbcType=INTEGER} and user_id =
+		#{userId,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectByBlogAndUser"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select like_id, blog_id, user_id, like_status
+		from tb_like
+		where blog_id = #{blogId,jdbcType=INTEGER} and user_id =
+		#{userId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAllByBlog" resultMap="UserBlogResultMap" parameterType="java.lang.Integer">
+		SELECT
+			u.user_id,
+			l.blog_id,
+			u.nickname,
+			u.signature,
+			u.headimg,
+			u.coverimg,
+			u.focusCount
+		FROM
+			tb_user AS u
+			LEFT JOIN tb_like AS l ON u.user_id = l.user_id
+		WHERE
+			l.blog_id = #{blogId,jdbcType=INTEGER}
+	</select>
+</mapper>
