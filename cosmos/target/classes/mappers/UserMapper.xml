@@ -1,15 +1,37 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- mapper:根标签，namespace：命名空间，随便写，一般保证命名空间唯一 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jiuqi.cosmos.dao.UserDao">
-	<insert id="createUser" parameterType="User">
+  <resultMap id="BaseResultMap" type="com.jiuqi.cosmos.entity.User">
+    <id column="user_id" jdbcType="INTEGER" property="userid" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
+    
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="signature" jdbcType="LONGVARCHAR" property="signature" />
+
+    <result column="coverimg" jdbcType="VARCHAR" property="coverimg" />
+    <result column="headimg" jdbcType="VARCHAR" property="headimg" />
+    
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+    
+    <result column="focusCount" jdbcType="INTEGER" property="focuscount" />
+  </resultMap>
+  
+	<insert id="createUser" parameterType="com.jiuqi.cosmos.entity.User">
 	<!-- 有默认值的需要存入对应的默认值：昵称，个性签名，头像，封面 -->
 		insert into tb_user
-		values(null,#{phone},#{password},#{answer},'随风飘摇', '人生不是在吃就是在去吃的路上', null,now(),null,null)
+		values(null,#{phone},#{password},#{answer},'随风飘摇', '人生不是在吃就是在去吃的路上', null,null,now(),null,null,0)
 	</insert>
-
+	<update id="updateFocusCount">
+		update tb_user set focusCount = #{focusCount} where userid = #{userid}
+	</update>
+	<update id="deleteById" parameterType="Integer">
+		delete from tb_user where userid = #{userid}
+	</update>
 	<!-- 根据id只查询相应的数据 -->
 	<select id="getByPhone" resultType="User">
 		select * from tb_user where phone=#{phone}
@@ -21,7 +43,7 @@
 		select * from tb_user
 	</select>
 		<!-- 根据id只查询相应的数据 -->
-	<select id="getById" resultType="User">
+	<select id="getById" resultType="User" parameterType="Integer">
 		select * from tb_user where userid=#{userid}
 	</select>
 </mapper>

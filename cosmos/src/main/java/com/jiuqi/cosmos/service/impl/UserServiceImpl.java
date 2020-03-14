@@ -16,13 +16,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean createUser(User user) {
-		System.out.println("sdf");
 		return userDao.createUser(user);
-	}
-
-	@Override
-	public int updateUserinfo(User user) {
-		return userDao.updateUserinfo(user);
 	}
 
 	@Override
@@ -43,6 +37,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> getAll() {
 		return userDao.getAll();
+	}
+
+	@Override
+	public boolean deleteById(Integer userid) {
+		return userDao.deleteById(userid);
+	}
+
+	@Override
+	public int updateFocusCount(User user) {
+		return userDao.updateFocusCount(user);
 	}
 
 }
