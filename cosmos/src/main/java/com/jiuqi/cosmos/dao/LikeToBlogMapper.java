@@ -7,15 +7,19 @@ import java.util.List;
 
 public interface LikeToBlogMapper {
     int deleteByPrimaryKey(Integer likeId);
+    
+    int deleteByRecipeId(Integer recipeId);
 
     int insert(LikeToBlog record);
 
 //    LikeToBlog selectByPrimaryKey(Integer likeId);
     
-    LikeToBlog selectByBlogAndUser(Integer blogId, Integer userId);
+    LikeToBlog selectByBlogAndUser(Integer recipeId, Integer userId);
     
 
-    List<UserInfoDTO> selectAllByBlog(Integer blogId);
+    List<UserInfoDTO> selectUserInfoByBlog(Integer recipeId);
+    
+    List<LikeToBlog> selectLikeByBlog(Integer recipeId);
 
     int updateByPrimaryKey(LikeToBlog record);
 }

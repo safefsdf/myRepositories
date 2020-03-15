@@ -65,8 +65,8 @@ public class UserController {
 	public R<User> register(@RequestBody User user) {
 		System.out.println(user.toString());
 		try {
-			boolean res = userService.createUser(user);
-			if(res) {
+			int res = userService.createUser(user);
+			if(res == 1) {
 				 return R.success(user, ResultEnum.SUCCESS.getCode(), "注册"+ ResultEnum.SUCCESS.getMsg()) ;
 			}
 		} catch (Exception e) {

@@ -2,18 +2,16 @@ package com.jiuqi.cosmos.pojo;
 
 public class UserInfoDTO {
 	private Integer userId;
-	private Integer blogId;
 	private String nickname;
 	private String signature;
 	private String headimg;
 	private String coverimg;
 	private Integer focusCount;
 
-	public UserInfoDTO(Integer userId, Integer blogId, String nickname, String signature, String headimg,
+	public UserInfoDTO(Integer userId,  String nickname, String signature, String headimg,
 			String coverimg, Integer focusCount) {
 		super();
 		this.userId = userId;
-		this.blogId = blogId;
 		this.nickname = nickname;
 		this.signature = signature;
 		this.headimg = headimg;
@@ -23,7 +21,7 @@ public class UserInfoDTO {
 
 	@Override
 	public String toString() {
-		return "UserInfoDTO [userId=" + userId + ", blogId=" + blogId + ", nickname=" + nickname + ", signature="
+		return "UserInfoDTO [userId=" + userId +  ", nickname=" + nickname + ", signature="
 				+ signature + ", headimg=" + headimg + ", coverimg=" + coverimg + ", focusCount=" + focusCount + "]";
 	}
 
@@ -35,14 +33,7 @@ public class UserInfoDTO {
 		this.userId = userId;
 	}
 
-	public Integer getBlogId() {
-		return blogId;
-	}
-
-	public void setBlogId(Integer blogId) {
-		this.blogId = blogId;
-	}
-
+	 
 	public UserInfoDTO() {
 		super();
 		// TODO Auto-generated constructor stub

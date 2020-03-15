@@ -5,7 +5,7 @@ public class UserConstants {
 	public static final String PWD_ERROR = "您输入的密码错误";
 	public static final String SUCCESS = "成功";
 	public static final String FAIL = "失败";
-
+	public static final String CRAWLERURL = "https://www.douguo.com";
 	// 保存用关注数据的key
 	public static final String MAP_KEY_USER_FOCUS = "MAP_USER_FOCUS";
 	// 保存用户被关注数量的key
@@ -20,4 +20,10 @@ public class UserConstants {
 	public static final String MAP_KEY_USER_COLLECT = "MAP_USER_COLLECT";
 	// 保存用户被收藏数量的key
 	public static final String MAP_KEY_USER_COLLECT_COUNT = "MAP_USER_COLLECT_COUNT";
+	
+	public static final String RECIPE_NOT_EXIST = "00";
+	public static final String STEPS_DELETE_FAIL = "01";
+	public static final String STEPS_IS_NULL = "02";
+	public static final String RECIPE_DELETE_SUC = "03";
+
 }

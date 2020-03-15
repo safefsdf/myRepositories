@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuqi.cosmos.dao.ClassifyInfoMapper">
+  <resultMap id="BaseResultMap" type="com.jiuqi.cosmos.entity.ClassifyInfo">
+    <result column="classify_id" jdbcType="INTEGER" property="classifyId" />
+    <result column="classify_name" jdbcType="VARCHAR" property="classifyName" />
+    <result column="classify_pid" jdbcType="INTEGER" property="classifyPid" />
+    <result column="classify_type" jdbcType="INTEGER" property="classifyType" />
+  </resultMap>
+  <insert id="insert" parameterType="com.jiuqi.cosmos.entity.ClassifyInfo" useGeneratedKeys="true" keyProperty="classifyId">
+    insert into tb_classify (classify_id, classify_name, classify_pid, 
+      classify_type)
+    values (#{classifyId,jdbcType=INTEGER}, #{classifyName,jdbcType=VARCHAR}, #{classifyPid,jdbcType=INTEGER}, 
+      #{classifyType,jdbcType=INTEGER})
+  </insert>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select classify_id, classify_name, classify_pid, classify_type
+    from tb_classify
+  </select>
+   <select id="selectByClassifyName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select classify_id, classify_name, classify_pid, classify_type
+    from tb_classify
+    where classify_name = #{classifyName,jdbcType=VARCHAR}
+  </select>
+  
+  
+   <select id="selectByClassifyPid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select classify_id, classify_name, classify_pid, classify_type
+    from tb_classify
+    where classify_pid = #{classifyPid,jdbcType=VARCHAR}
+  </select>
+  
+  
+</mapper>

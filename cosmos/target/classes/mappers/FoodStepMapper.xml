@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuqi.cosmos.dao.FoodStepMapper">
+  <resultMap id="BaseResultMap" type="com.jiuqi.cosmos.entity.FoodStep">
+    <result column="step_id" jdbcType="INTEGER" property="stepId" />
+    <result column="step_title" jdbcType="VARCHAR" property="stepTitle" />
+    <result column="step_img" jdbcType="VARCHAR" property="stepImg" />
+    <result column="step_description" jdbcType="LONGVARCHAR" property="stepDescription" />
+  </resultMap>
+  <insert id="insert" parameterType="com.jiuqi.cosmos.entity.FoodStep" useGeneratedKeys="true" keyProperty="stepId" >
+    insert into tb_food_steps (step_id, step_title, step_img, 
+      step_description)
+    values (#{stepId,jdbcType=INTEGER}, #{stepTitle,jdbcType=VARCHAR}, #{stepImg,jdbcType=VARCHAR}, 
+      #{stepDescription,jdbcType=LONGVARCHAR})
+  </insert>
+   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    delete from tb_food_steps
+	    where step_id = #{stepId,jdbcType=INTEGER}
+  </delete>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select step_id, step_title, step_img, step_description
+    from tb_food_steps
+  </select>
+   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select step_id, step_title, step_img, step_description
+    from tb_food_steps
+    where step_id = #{stepId,jdbcType=INTEGER}
+    
+  </select>
+  
+  
+</mapper>

@@ -156,6 +156,11 @@ public class User {
 		this.signature = signature;
 	}
 
+	
+	public User() {
+		super();
+	}
+
 	public User(String phone, String password, String nickname, String address, String headimg, String coverimg,
 			Date createtime, String sex, String signature) {
 		super();
@@ -168,10 +173,6 @@ public class User {
 		this.createtime = createtime;
 		this.sex = sex;
 		this.signature = signature;
-	}
-
-	public User() {
-		super();
 	}
 
 	 

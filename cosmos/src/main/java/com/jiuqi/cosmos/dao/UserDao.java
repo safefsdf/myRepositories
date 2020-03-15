@@ -11,7 +11,7 @@ public interface UserDao {
 	 * @param user
 	 * @return
 	 */
-	boolean createUser(User user);
+	int insert(User user);
 
 	
 	
@@ -55,7 +55,7 @@ public interface UserDao {
 	 * @param phone
 	 * @return
 	 */
-	User getByPhone(String phone);
+	User quaryByPhone(String phone);
 
 	/**
 	 * 根据id查询

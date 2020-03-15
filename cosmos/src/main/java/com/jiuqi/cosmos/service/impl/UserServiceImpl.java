@@ -15,8 +15,8 @@ public class UserServiceImpl implements UserService {
 	private UserDao userDao;
 
 	@Override
-	public boolean createUser(User user) {
-		return userDao.createUser(user);
+	public int createUser(User user) {
+		return userDao.insert(user);
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getByPhone(String phone) {
-		return userDao.getByPhone(phone);
+		return userDao.quaryByPhone(phone);
 	}
 
 	@Override

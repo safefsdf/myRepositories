@@ -6,7 +6,7 @@ import com.jiuqi.cosmos.entity.User;
 
 public interface UserService {
 
-	boolean createUser(User user);
+	int createUser(User user);
 
 //	 int updateUserinfo(User user);
 

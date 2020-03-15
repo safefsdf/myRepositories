@@ -156,7 +156,7 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 
 	@Override
 	public List<UserInfoDTO> getLikedByBlogId(Integer blogId) {
-		return likeToBlogDao.selectAllByBlog(blogId);
+		return likeToBlogDao.selectUserInfoByBlog(blogId);
 	}
 
 	@Override

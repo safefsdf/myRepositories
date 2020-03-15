@@ -3,13 +3,21 @@ package com.jiuqi.cosmos.entity;
 public class CollectToBlog {
     private Integer collectId;
 
-    private Integer blogId;
+    private Integer recipeId;
 
     private Integer userId;
 
     private Integer collectStatus;
 
-    public Integer getCollectId() {
+    public CollectToBlog(Integer collectId, Integer recipeId, Integer userId, Integer collectStatus) {
+		super();
+		this.collectId = collectId;
+		this.recipeId = recipeId;
+		this.userId = userId;
+		this.collectStatus = collectStatus;
+	}
+
+	public Integer getCollectId() {
         return collectId;
     }
 
@@ -17,12 +25,12 @@ public class CollectToBlog {
         this.collectId = collectId;
     }
 
-    public Integer getBlogId() {
-        return blogId;
+    public Integer getrecipeId() {
+        return recipeId;
     }
 
-    public void setBlogId(Integer blogId) {
-        this.blogId = blogId;
+    public void setrecipeId(Integer recipeId) {
+        this.recipeId = recipeId;
     }
 
     public Integer getUserId() {
@@ -41,9 +49,9 @@ public class CollectToBlog {
         this.collectStatus = collectStatus;
     }
 
-	public CollectToBlog(Integer blogId, Integer userId, Integer collectStatus) {
+	public CollectToBlog(Integer recipeId, Integer userId, Integer collectStatus) {
 		super();
-		this.blogId = blogId;
+		this.recipeId = recipeId;
 		this.userId = userId;
 		this.collectStatus = collectStatus;
 	}
@@ -54,7 +62,7 @@ public class CollectToBlog {
 
 	@Override
 	public String toString() {
-		return "CollectToBlog [collectId=" + collectId + ", blogId=" + blogId + ", userId=" + userId
+		return "CollectToBlog [collectId=" + collectId + ", recipeId=" + recipeId + ", userId=" + userId
 				+ ", collectStatus=" + collectStatus + "]";
 	}
     

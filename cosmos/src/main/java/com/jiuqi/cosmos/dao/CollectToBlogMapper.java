@@ -11,7 +11,8 @@ public interface CollectToBlogMapper {
     int insert(CollectToBlog record);
 
     CollectToBlog selectByBlogAndUser(Integer blogId, Integer userId);
-    List<UserInfoDTO> selectAllByBlogId(Integer blogId);
+    List<UserInfoDTO> selectAllByBlogId(Integer recipeId);
+    List<CollectToBlog> selectCollectByBlog(Integer recipeId);
 
     int updateByblogAndUser(CollectToBlog record);
 }

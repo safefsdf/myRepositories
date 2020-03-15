@@ -3,7 +3,7 @@ package com.jiuqi.cosmos.entity;
 public class LikeToBlog {
     private Integer likeId;
 
-    private Integer blogId;
+    private Integer recipeId;
 
     private Integer userId;
 
@@ -17,12 +17,12 @@ public class LikeToBlog {
         this.likeId = likeId;
     }
 
-    public Integer getBlogId() {
-        return blogId;
+    public Integer getrecipeId() {
+        return recipeId;
     }
 
-    public void setBlogId(Integer blogId) {
-        this.blogId = blogId;
+    public void setrecipeId(Integer recipeId) {
+        this.recipeId = recipeId;
     }
 
     public Integer getUserId() {
@@ -43,7 +43,7 @@ public class LikeToBlog {
 
 	@Override
 	public String toString() {
-		return "LikeToBlog [likeId=" + likeId + ", blogId=" + blogId + ", userId=" + userId + ", likeStatus="
+		return "LikeToBlog [likeId=" + likeId + ", recipeId=" + recipeId + ", userId=" + userId + ", likeStatus="
 				+ likeStatus + "]";
 	}
 
@@ -52,17 +52,17 @@ public class LikeToBlog {
 		// TODO Auto-generated constructor stub
 	}
 
-	public LikeToBlog(Integer likeId, Integer blogId, Integer userId, Integer likeStatus) {
+	public LikeToBlog(Integer likeId, Integer recipeId, Integer userId, Integer likeStatus) {
 		super();
 		this.likeId = likeId;
-		this.blogId = blogId;
+		this.recipeId = recipeId;
 		this.userId = userId;
 		this.likeStatus = likeStatus;
 	}
 
-	public LikeToBlog(Integer blogId, Integer userId, Integer likeStatus) {
+	public LikeToBlog(Integer recipeId, Integer userId, Integer likeStatus) {
 		super();
-		this.blogId = blogId;
+		this.recipeId = recipeId;
 		this.userId = userId;
 		this.likeStatus = likeStatus;
 	}
