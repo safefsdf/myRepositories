@@ -16,7 +16,7 @@ public interface UserService {
 
 	User getById(int userid);
 
-	boolean deleteById(Integer userid);
+	Integer deleteById(Integer userid);
 
 	List<User> getAll();
 

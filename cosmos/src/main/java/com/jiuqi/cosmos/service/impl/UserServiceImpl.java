@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean deleteById(Integer userid) {
-		return userDao.deleteById(userid);
+	public Integer deleteById(Integer userid) {
+		return userDao.deleteByPrimaryKey(userid);
 	}
 
 	@Override

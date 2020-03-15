@@ -1,6 +1,7 @@
 package com.jiuqi.cosmos.dao;
 
 import java.util.List;
+
 import com.jiuqi.cosmos.entity.User;
 
 public interface UserDao {
@@ -12,13 +13,15 @@ public interface UserDao {
 	 */
 	boolean createUser(User user);
 
+	
+	
 	/**
 	 * 注销
 	 * 
 	 * @param user
 	 * @return
 	 */
-	boolean deleteById(Integer userid);
+	int deleteByPrimaryKey(Integer userId);
 
 	/**
 	 * 更新数据库中的粉丝量
@@ -27,6 +30,8 @@ public interface UserDao {
 	 * @return
 	 */
 	int updateFocusCount(User user);
+	
+	int updateByPrimaryKey(User user);
 
 	/**
 	 * 修改信息

@@ -85,7 +85,7 @@ public class UserController {
 	public R<User> cancel(Integer userid){
 		R<User> r = new R<User>();
 		try {
-			if(userService.deleteById(userid)) {
+			if(userService.deleteById(userid)==1) {
 				r.setCode(1);
 				r.setMsg("delete success");
 			}

@@ -3,7 +3,7 @@ package com.jiuqi.cosmos.entity;
 import java.util.Date;
 
 public class User {
-    private Integer userid;
+    private Integer userId;
 
     private String phone;
 
@@ -12,6 +12,8 @@ public class User {
     private String answer;
 
     private String nickname;
+    
+    private String address;
 
     private String headimg;
 
@@ -21,9 +23,7 @@ public class User {
 
     private String sex;
 
-    private Date birthday;
-
-    private Integer focuscount;
+    private Integer focusCount;
 
     private String signature;
     private String token;
@@ -34,15 +34,15 @@ public class User {
 	}
 
 	public void setToken(String token) {
-		this.token = token;
+		this.token = token==null?null:token.trim();
 	}
 
 	public Integer getUserid() {
-        return userid;
+        return userId;
     }
 
     public void setUserid(Integer userid) {
-        this.userid = userid;
+        this.userId = userid;
     }
 
     public String getPhone() {
@@ -109,20 +109,22 @@ public class User {
         this.sex = sex == null ? null : sex.trim();
     }
 
-    public Date getBirthday() {
-        return birthday;
-    }
+     
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
+    public String getAddress() {
+		return address;
+	}
 
-    public Integer getFocuscount() {
-        return focuscount;
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Integer getFocuscount() {
+        return focusCount;
     }
 
     public void setFocuscount(Integer focuscount) {
-        this.focuscount = focuscount;
+        this.focusCount = focuscount;
     }
 
     public String getSignature() {
@@ -135,10 +137,42 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userid=" + userid + ", phone=" + phone + ", password=" + password + ", answer=" + answer
-				+ ", nickname=" + nickname + ", headimg=" + headimg + ", coverimg=" + coverimg + ", createtime="
-				+ createtime + ", sex=" + sex + ", birthday=" + birthday + ", focuscount=" + focuscount + ", signature="
+		return "User [userid=" + userId + ", phone=" + phone + ", password=" + password + ", answer=" + answer
+				+ ", nickname=" + nickname + ", address=" + address + ", headimg=" + headimg + ", coverimg=" + coverimg
+				+ ", createtime=" + createtime + ", sex=" + sex + ", focuscount=" + focusCount + ", signature="
 				+ signature + ", token=" + token + "]";
 	}
-    
+
+	public User(String phone, String password, String nickname, String headimg, String coverimg, Date createtime,
+			String sex, String signature) {
+		super();
+		this.phone = phone;
+		this.password = password;
+		this.nickname = nickname;
+		this.headimg = headimg;
+		this.coverimg = coverimg;
+		this.createtime = createtime;
+		this.sex = sex;
+		this.signature = signature;
+	}
+
+	public User(String phone, String password, String nickname, String address, String headimg, String coverimg,
+			Date createtime, String sex, String signature) {
+		super();
+		this.phone = phone;
+		this.password = password;
+		this.nickname = nickname;
+		this.address = address;
+		this.headimg = headimg;
+		this.coverimg = coverimg;
+		this.createtime = createtime;
+		this.sex = sex;
+		this.signature = signature;
+	}
+
+	public User() {
+		super();
+	}
+
+	 
 }
