@@ -23,6 +23,11 @@
 		delete from tb_collect
 		where collect_id = #{collectId,jdbcType=INTEGER}
 	</delete>
+	<delete id="deleteByRecipeId"
+		parameterType="java.lang.Integer">
+		delete from tb_collect
+		where recipe_id = #{recipeId,jdbcType=INTEGER}
+	</delete>
 	<insert id="insert"
 		parameterType="com.jiuqi.cosmos.entity.CollectToBlog">
 		insert into tb_collect (collect_id, recipe_id, user_id,
@@ -38,6 +43,7 @@
 		where recipe_id = #{recipeId,jdbcType=INTEGER} and user_id =
 		#{userId,jdbcType=INTEGER}
 	</update>
+	
 	<select id="selectByBlogAndUser"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">
 		select collect_id, recipe_id, user_id, collect_status
@@ -45,13 +51,20 @@
 		where recipe_id = #{recipeId,jdbcType=INTEGER} and user_id =
 		#{userId,jdbcType=INTEGER}
 	</select>
+	<select id="selectCollectByUser"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select collect_id, recipe_id, user_id, collect_status
+		from tb_collect
+		where user_id =	#{userId,jdbcType=INTEGER}
+	</select>
 	<select id="selectCollectByBlog"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">
 		select collect_id, recipe_id, user_id, collect_status
 		from tb_collect
-		where recipe_id = #{recipeId,jdbcType=INTEGER}
+		where recipe_id = #{recipeId,jdbcType=INTEGER} 
 	</select>
-	<select id="selectAllByrecipeId" resultMap="UserBlogResultMap" parameterType="java.lang.Integer">
+	
+	<select id="selectUserByrecipeId" resultMap="UserBlogResultMap" parameterType="java.lang.Integer">
 		SELECT
 			u.user_id,
 			c.recipe_id,

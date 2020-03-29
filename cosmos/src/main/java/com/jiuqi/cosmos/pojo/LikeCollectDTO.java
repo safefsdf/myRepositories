@@ -1,8 +1,8 @@
 package com.jiuqi.cosmos.pojo;
 
 public class LikeCollectDTO {
-	//用户userId给blogId点赞，或收藏了blogId
-	private Integer blogId;
+	//用户userId给recipeId点赞，或收藏了recipeId
+	private Integer recipeId;
 	private Integer userId;
 	private Integer status;
 	private String type;
@@ -14,11 +14,11 @@ public class LikeCollectDTO {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public Integer getBlogId() {
-		return blogId;
+	public Integer getrecipeId() {
+		return recipeId;
 	}
-	public void setBlogId(Integer blogId) {
-		this.blogId = blogId;
+	public void setrecipeId(Integer recipeId) {
+		this.recipeId = recipeId;
 	}
 	public Integer getUserId() {
 		return userId;
@@ -38,12 +38,12 @@ public class LikeCollectDTO {
 	
 	@Override
 	public String toString() {
-		return "LikeCollectDTO [blogId=" + blogId + ", userId=" + userId + ", status=" + status + ", type=" + type
+		return "LikeCollectDTO [recipeId=" + recipeId + ", userId=" + userId + ", status=" + status + ", type=" + type
 				+ "]";
 	}
-	public LikeCollectDTO(Integer blogId, Integer userId, Integer status) {
+	public LikeCollectDTO(Integer recipeId, Integer userId, Integer status) {
 		super();
-		this.blogId = blogId;
+		this.recipeId = recipeId;
 		this.userId = userId;
 		this.status = status;
 	}

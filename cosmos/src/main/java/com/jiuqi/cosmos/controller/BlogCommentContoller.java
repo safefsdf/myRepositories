@@ -17,7 +17,7 @@ public class BlogCommentContoller {
 	@Autowired
 	public BlogCommentService commentService;
 	@RequestMapping("commentList")
-	public R getComment(int recipeId){
+	public R<BlogComment> getComment(int recipeId){
 		List<BlogComment> list = commentService.selectAllByrecipeId(recipeId);
 		return R.success(list, 200, "suc");
 	}

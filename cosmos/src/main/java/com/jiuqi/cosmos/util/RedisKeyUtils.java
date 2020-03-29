@@ -7,7 +7,7 @@ import io.netty.util.internal.StringUtil;
 
 public class RedisKeyUtils {
 
-   
+	
 
     /**	
      * 拼接被点赞的用户id和点赞的人的id作为key。格式 222222::333333

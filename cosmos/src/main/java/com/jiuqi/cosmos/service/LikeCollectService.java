@@ -20,18 +20,18 @@ public interface LikeCollectService {
 	/**
 	 * 	从数据库中获取某一篇博客的点赞收藏的用户列表
 	 * 
-	 * @param blogId
+	 * @param recipeId
 	 * @return
 	 */
-	public List<UserInfoDTO> getLikedByBlogId(Integer blogId);
+	public List<UserInfoDTO> getLikedByrecipeId(Integer recipeId);
 
 	/**
 	 * 	从数据库中获取某一篇博客的点赞收藏的用户列表
 	 * 
-	 * @param blogId
+	 * @param recipeId
 	 * @return
 	 */
-	public List<UserInfoDTO> getCollectedByBlogId(Integer blogId);
+	public List<UserInfoDTO> getCollectedByrecipeId(Integer recipeId);
 
 	/**
 	 * likeCollectDTO信息处理后存到redis中
@@ -48,5 +48,6 @@ public interface LikeCollectService {
 	 * @return
 	 */
 	public boolean unlikeToblogToRedis(LikeCollectDTO likeCollectDTO);
+
 
 }

@@ -11,8 +11,6 @@ public class FoodRecipe {
 
     private Integer userId;
 
-   
-
     private Integer classifyId;
 
     private String recipeCoverimg;

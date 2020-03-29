@@ -1,7 +1,5 @@
 package com.jiuqi.cosmos.controller;
 
-import static com.jiuqi.cosmos.pojo.R.error;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;

@@ -27,7 +27,7 @@ public class LikeCollectController {
 	 * @return
 	 */
 	@RequestMapping("likeOrUnlike")
-	public R LikeOrCollectToBlog(@RequestBody LikeCollectDTO likeCollectDTO) {
+	public R<?> LikeOrCollectToBlog(@RequestBody LikeCollectDTO likeCollectDTO) {
 		System.out.println(likeCollectDTO.toString());
 		boolean flag = false;
 		System.out.println(likeCollectDTO.toString());
@@ -44,14 +44,14 @@ public class LikeCollectController {
 		return R.error();
 	}
 	@RequestMapping("likeOrCollectCount")
-	public R<LikeCountDTO> getBlogFun(Integer blogId) {
+	public R<LikeCountDTO> getBlogFun(Integer recipeId) {
 		try {
-			List<UserInfoDTO> likeUserList = like_collectService.getLikedByBlogId(blogId);
+			List<UserInfoDTO> likeUserList = like_collectService.getLikedByrecipeId(recipeId);
 			Integer likeCount = likeUserList.size();
-			List<UserInfoDTO> collectUserList = like_collectService.getCollectedByBlogId(blogId);
+			List<UserInfoDTO> collectUserList = like_collectService.getCollectedByrecipeId(recipeId);
 			Integer collectCount = collectUserList.size();
 			
-			LikeCountDTO dto = new LikeCountDTO(blogId, likeCount, likeUserList, collectCount, collectUserList);
+			LikeCountDTO dto = new LikeCountDTO(recipeId, likeCount, likeUserList, collectCount, collectUserList);
 			return R.success(dto, ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
 		} catch (Exception e) {
 			System.out.println(e);

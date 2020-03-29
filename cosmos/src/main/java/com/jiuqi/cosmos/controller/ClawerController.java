@@ -12,7 +12,7 @@ public class ClawerController {
 	@Autowired
 	CrawlerServiceImpl craw;
 	@RequestMapping("hello")
-	public R testPathon() {
+	public R<?> testPathon() {
 		try {
 			craw.itemTask();
 			return new R(200, "suc");

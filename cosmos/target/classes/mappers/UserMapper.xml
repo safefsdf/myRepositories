@@ -15,7 +15,20 @@
     <result column="focus_count" jdbcType="INTEGER" property="focusCount" />
     <result column="signature" jdbcType="LONGVARCHAR" property="signature" />
   </resultMap>
-  
+  <resultMap id="BaseRecipeResultMap" type="com.jiuqi.cosmos.entity.FoodRecipe">
+    <result column="recipe_id" jdbcType="INTEGER" property="recipeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="classify_id" jdbcType="INTEGER" property="classifyId" />
+    <result column="recipe_coverImg" jdbcType="VARCHAR" property="recipeCoverimg" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="recipe_steps" jdbcType="VARCHAR" property="recipeSteps" />
+    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
+    <result column="recipe_title" jdbcType="LONGVARCHAR" property="recipeTitle" />
+    <result column="recipe_intro" jdbcType="LONGVARCHAR" property="recipeIntro" />
+    <result column="recipe_usage" jdbcType="LONGVARCHAR" property="recipeUsage" />
+    <result column="recipe_tips" jdbcType="LONGVARCHAR" property="recipeTips" />
+  </resultMap>
 	<!-- <insert id="createUser" parameterType="com.jiuqi.cosmos.entity.User">
 	有默认值的需要存入对应的默认值：昵称，个性签名，头像，封面
 		insert into tb_user
@@ -69,4 +82,74 @@
 	<select id="getById" resultMap="BaseResultMap" parameterType="Integer">
 		select * from tb_user where user_id=#{userId}
 	</select>
+	
+	<select id="selectFoodRecipeByUser" resultMap="BaseRecipeResultMap" parameterType="Integer">
+		SELECT
+			r.recipe_id,
+			r.user_id,
+		 r.recipe_title,
+			r.recipe_coverImg,
+			r.recipe_intro,
+			r.recipe_usage,
+			r.classify_id,
+			r.createtime,
+			r.recipe_steps,
+			r.recipe_tips
+		FROM
+			tb_food_recipe AS r
+		JOIN user_focus AS u ON u.focus_user_id = r.user_id
+		where u.focus_post_id = #{focusPostId}
+		order by r.createtime desc
+	</select>
+	
+	<select id="selectRecipeFromLike" resultMap="BaseRecipeResultMap" parameterType="Integer">
+		SELECT
+			r.recipe_id,
+			r.user_id,
+			c.classify_id,
+			r.recipe_title,
+			r.recipe_coverImg,
+			r.recipe_intro,
+			r.recipe_usage,
+			r.createtime,
+			r.recipe_steps,
+			r.recipe_tips
+		FROM
+			tb_food_recipe AS r
+		JOIN (
+			SELECT
+				classify_id
+			FROM
+				tb_like AS l
+			JOIN tb_food_recipe AS r ON l.recipe_id = r.recipe_id
+			where l.user_id = #{userId}
+		) c ON r.classify_id = c.classify_id 
+	</select>
+	
+	<select id="selectRecipeFromCollect" resultMap="BaseRecipeResultMap" parameterType="Integer">
+		 SELECT
+			r.recipe_id,
+			r.user_id,
+			c.classify_id,
+			r.recipe_title,
+			r.recipe_coverImg,
+			r.recipe_intro,
+			r.recipe_usage,
+			r.createtime,
+			r.recipe_steps,
+			r.recipe_tips
+		FROM
+			tb_food_recipe AS r
+		JOIN (
+			SELECT
+				classify_id
+			FROM
+				tb_collect AS col
+			JOIN tb_food_recipe AS r ON col.recipe_id = r.recipe_id
+			where col.user_id = #{userId}
+		) c ON r.classify_id = c.classify_id
+		 
+	</select>
+	
+	
 </mapper>

@@ -2,6 +2,7 @@ package com.jiuqi.cosmos.dao;
 
 import java.util.List;
 
+import com.jiuqi.cosmos.entity.FoodRecipe;
 import com.jiuqi.cosmos.entity.User;
 
 public interface UserDao {
@@ -63,7 +64,7 @@ public interface UserDao {
 	 * @param userid
 	 * @return
 	 */
-	User getById(int userid);
+	User getById(int userId);
 
 	/**
 	 * 返回所有用户信息
@@ -71,5 +72,13 @@ public interface UserDao {
 	 * @return
 	 */
 	List<User> getAll();
-
+	
+	/**
+	 *	 查询所关注的用户发送的食谱集合
+	 * @param userId
+	 * @return
+	 */
+	List<FoodRecipe> selectFoodRecipeByUser(Integer focusPostId);
+	List<FoodRecipe> selectRecipeFromLike(Integer userId);
+	List<FoodRecipe> selectRecipeFromCollect(Integer userId);
 }

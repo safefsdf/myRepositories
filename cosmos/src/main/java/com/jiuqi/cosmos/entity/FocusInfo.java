@@ -6,7 +6,7 @@ public class FocusInfo {
 	// 被关注的用户的id（主）
 	private Integer focusUserId;
 
-	// 关注的用户的id（访客）
+	// 主动关注的用户的id（访客）
 	private Integer focusPostId;
 
 	// 关注的状态（0/1）

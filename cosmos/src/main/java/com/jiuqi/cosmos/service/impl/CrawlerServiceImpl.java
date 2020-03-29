@@ -111,14 +111,18 @@ public class CrawlerServiceImpl {
 	 * @param recipePId
 	 */
 	public void getLevelSon(Document doc, Integer recipePId) {
-		Elements urls = doc.select(".mt25>ul.cook-list>li");
-		Element element = urls.get(0);
-		for (Element contentLi : urls) {
-			String attr = UserConstants.CRAWLERURL + contentLi.select("a.cook-img").attr("href");
-			String html = httpUtils.doGetHtml(attr);
-			System.out.println("getLevelSon中请求: "+attr+" 成功");
-			Document docInfo = Jsoup.parse(html);
-			getLastToRecipe(docInfo, recipePId);
+		try {
+			Elements urls = doc.select(".mt25>ul.cook-list>li");
+			Element element = urls.get(0);
+			for (Element contentLi : urls) {
+				String attr = UserConstants.CRAWLERURL + contentLi.select("a.cook-img").attr("href");
+				String html = httpUtils.doGetHtml(attr);
+				System.out.println("getLevelSon中请求: "+attr+" 成功");
+				Document docInfo = Jsoup.parse(html);
+				getLastToRecipe(docInfo, recipePId);
+			}
+		} catch (Exception e) {
+			System.out.println(" java.lang.IndexOutOfBoundsException: Index: 0, Size: 0  CrawlerServiceImpl.getLevelSon");
 		}
 	}
 	/**
@@ -129,60 +133,66 @@ public class CrawlerServiceImpl {
 	public void getLastToRecipe(Document doc, Integer classifyPid) {
 		Elements urls = doc.select("div#content>div#left");
 
-		Element ele = urls.get(0);
-		// 食谱的封面图片
-		String coverImg = ele.select("#banner>a").attr("href");
+		
+		try {
+			Element ele = urls.get(0);
+			// 食谱的封面图片
+			String coverImg = ele.select("#banner>a").attr("href");
 
-		// 食谱的标题
-		String recipeTitle = ele.select("div.rinfo>h1.title").text();
+			// 食谱的标题
+			String recipeTitle = ele.select("div.rinfo>h1.title").text();
 
-		// 食谱介绍： ele.select("div.rinfo>p.intro").text();
-		String recipeIntro = ele.select("div.rinfo>p.intro").text();
+			// 食谱介绍： ele.select("div.rinfo>p.intro").text();
+			String recipeIntro = ele.select("div.rinfo>p.intro").text();
 
-		// 用法用量
-		Elements recipeUsageEles = ele.select("div.metarial td");
-		Map<String, String> usageMap = new HashMap<String, String>();
-		for (Element recipeUsageEle : recipeUsageEles) {
-			String usageMapKey = recipeUsageEle.select("span.scname").text();
-			String usageMapValue = recipeUsageEle.select("span.scnum").text();
-			usageMap.put(usageMapKey, usageMapValue);
+			// 用法用量
+			Elements recipeUsageEles = ele.select("div.metarial td");
+			Map<String, String> usageMap = new HashMap<String, String>();
+			for (Element recipeUsageEle : recipeUsageEles) {
+				String usageMapKey = recipeUsageEle.select("span.scname").text();
+				String usageMapValue = recipeUsageEle.select("span.scnum").text();
+				usageMap.put(usageMapKey, usageMapValue);
+				
+			}
+			String recipeUsage = JSON.toJSONString(usageMap);
+
 			
-		}
-		String recipeUsage = JSON.toJSONString(usageMap);
-
-		
-		// 用户的Id:获取用户图片的链接，解析，获取图片，获取昵称，获取个性签名，性别，地址，自定义账号密码，.get(0).select("div.author-info>a")
-		Elements userSelect = ele.select("div.rinfo>div.vcnum").next("div");
-		String userHref = userSelect.get(0).select("a.author-img").attr("href");
-		String userUrl = UserConstants.CRAWLERURL + userHref;
-		
-		Integer userId = parseUserUrl(userUrl);
-		if(userId==null) {
-			return;
-		}
-		// 食谱的步骤
-		Elements select = ele.select("div.step>div.stepcont");
-		StringBuffer sb = new StringBuffer();
-		for (Element step : select) {
-			if(step.child(0)!=null) {
-				if( step.child(0).child(0)!=null) {
-					String stepImgUrl = step.child(0).child(0).attr("src");
-					String stepTitle = step.child(0).child(0).attr("alt");
-					String stepDesc = step.child(1).text();
-					FoodStep foodStep = new FoodStep(stepTitle, stepImgUrl, stepDesc);
-					foodStepDao.insert(foodStep);
-					sb.append(foodStep.getStepId());
+			// 用户的Id:获取用户图片的链接，解析，获取图片，获取昵称，获取个性签名，性别，地址，自定义账号密码，.get(0).select("div.author-info>a")
+			Elements userSelect = ele.select("div.rinfo>div.vcnum").next("div");
+			String userHref = userSelect.get(0).select("a.author-img").attr("href");
+			String userUrl = UserConstants.CRAWLERURL + userHref;
+			
+			Integer userId = parseUserUrl(userUrl);
+			if(userId==null) {
+				return;
+			}
+			StringBuffer sb;
+			// 食谱的步骤
+			Elements select = ele.select("div.step>div.stepcont");
+			sb = new StringBuffer();
+			for (Element step : select) {
+				if(step.child(0)!=null) {
+					if( step.child(0).child(0)!=null) {
+						String stepImgUrl = step.child(0).child(0).attr("src");
+						String stepTitle = step.child(0).child(0).attr("alt");
+						String stepDesc = step.child(1).text();
+						FoodStep foodStep = new FoodStep(stepTitle, stepImgUrl, stepDesc);
+						foodStepDao.insert(foodStep);
+						sb.append(foodStep.getStepId());
+					}
 				}
 			}
+			String recipeSteps = sb.toString();
+			// 食谱的小技巧
+			String recipeTips = ele.select("div.tips>p").text();
+			
+			FoodRecipe recipe = new FoodRecipe(userId, classifyPid, coverImg,
+					recipeIntro, recipeSteps, recipeTitle, recipeUsage, recipeTips);
+			foodRecipeDao.insert(recipe);
+			System.out.println(recipe.toString());
+		} catch (Exception e) {
+			System.out.println("java.lang.IndexOutOfBoundsException: Index: 0, Size: 0");
 		}
-		String recipeSteps = sb.toString();
-		// 食谱的小技巧
-		String recipeTips = ele.select("div.tips>p").text();
-
-		FoodRecipe recipe = new FoodRecipe(userId, classifyPid, coverImg,
-				recipeIntro, recipeSteps, recipeTitle, recipeUsage, recipeTips);
-		foodRecipeDao.insert(recipe);
-		System.out.println(recipe.toString());
 	}
 
 	/**

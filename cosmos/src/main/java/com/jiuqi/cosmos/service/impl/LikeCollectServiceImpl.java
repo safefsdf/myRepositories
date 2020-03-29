@@ -46,10 +46,10 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 		String like_key = RedisKeyUtils.likeOrCollectKey(likeCollectDTO);
 		String like_count_key = RedisKeyUtils.likeOrCollectCountKey(likeCollectDTO);
 		try {
-			String hashKey = RedisKeyUtils.getLikedKey(likeCollectDTO.getUserId(), likeCollectDTO.getBlogId());
+			String hashKey = RedisKeyUtils.getLikedKey(likeCollectDTO.getUserId(), likeCollectDTO.getrecipeId());
 			redisTemplate.opsForHash().put(like_key, hashKey, LikedStatusEnum.LIKE.getCode());// 点赞
-			if (likeCollectDTO.getBlogId() != null) {// 博客的点赞了+1
-				redisTemplate.opsForHash().increment(like_count_key, String.valueOf(likeCollectDTO.getBlogId()), 1);
+			if (likeCollectDTO.getrecipeId() != null) {// 博客的点赞了+1
+				redisTemplate.opsForHash().increment(like_count_key, String.valueOf(likeCollectDTO.getrecipeId()), 1);
 			}
 			flag = true;
 		} catch (Exception e) {
@@ -67,10 +67,10 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 		String like_key = RedisKeyUtils.likeOrCollectKey(likeCollectDTO);
 		String like_count_key = RedisKeyUtils.likeOrCollectCountKey(likeCollectDTO);
 		try {
-			String hashKey = RedisKeyUtils.getLikedKey(likeCollectDTO.getUserId(), likeCollectDTO.getBlogId());
+			String hashKey = RedisKeyUtils.getLikedKey(likeCollectDTO.getUserId(), likeCollectDTO.getrecipeId());
 			redisTemplate.opsForHash().put(like_key, hashKey, LikedStatusEnum.UNLIKE.getCode());// 取消点赞
-			if (likeCollectDTO.getBlogId() != null) {// 博客的点赞了+1
-				redisTemplate.opsForHash().increment(like_count_key, String.valueOf(likeCollectDTO.getBlogId()), -1);
+			if (likeCollectDTO.getrecipeId() != null) {// 博客的点赞了+1
+				redisTemplate.opsForHash().increment(like_count_key, String.valueOf(likeCollectDTO.getrecipeId()), -1);
 			}
 			flag = true;
 		} catch (Exception e) {
@@ -93,17 +93,24 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 			String key = (String) entry.getKey();
 			Integer value = (Integer) entry.getValue();
 			// 分离出 likedUserId，likedPostId
-			String[] split = key.split("::");
-			Integer userId = Integer.valueOf(split[0]);
-			Integer blogId = Integer.valueOf(split[1]);
-			LikeCollectDTO likeOrCol = new LikeCollectDTO();
-			likeOrCol.setUserId(userId);
-			likeOrCol.setBlogId(blogId);
-			likeOrCol.setStatus(value);
-			likeOrCol.setType(type);
-			focusInfoList.add(likeOrCol);
-			// 存到 list 后从 Redis 中删除,因为要向mysql中持久化，redis只是暂存的一个地方
-			redisTemplate.opsForHash().delete(likeOrCollect, key);
+			Integer userId;
+			Integer recipeId;
+			try {
+				String[] split = key.split("::");
+				userId = Integer.valueOf(split[0]);
+				recipeId = Integer.valueOf(split[1]);
+				LikeCollectDTO likeOrCol = new LikeCollectDTO();
+				likeOrCol.setUserId(userId);
+				likeOrCol.setrecipeId(recipeId);
+				likeOrCol.setStatus(value);
+				likeOrCol.setType(type);
+				focusInfoList.add(likeOrCol);
+				// 存到 list 后从 Redis 中删除,因为要向mysql中持久化，redis只是暂存的一个地方
+				redisTemplate.opsForHash().delete(likeOrCollect, key);
+			} catch (NumberFormatException e) {
+				System.out.println("LikeCollectServiceImpl.getLikedDataFromRedis");
+			}
+			
 		}
 		return focusInfoList;
 	}
@@ -114,9 +121,9 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 		String type = "like";
 		List<LikeCollectDTO> likeList = getLikedDataFromRedis(type);
 		for (LikeCollectDTO dto : likeList) {
-			LikeToBlog like = likeToBlogDao.selectByBlogAndUser(dto.getBlogId(), dto.getUserId());
+			LikeToBlog like = likeToBlogDao.selectByBlogAndUser(dto.getrecipeId(), dto.getUserId());
 			if (like == null) {
-				like = new LikeToBlog(dto.getBlogId(), dto.getUserId(), dto.getStatus());
+				like = new LikeToBlog(dto.getrecipeId(), dto.getUserId(), dto.getStatus());
 				likeToBlogDao.insert(like);
 			} else {
 				switch (like.getLikeStatus()) {
@@ -139,9 +146,9 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 		String type = "collect";
 		List<LikeCollectDTO> likeList = getLikedDataFromRedis(type);
 		for (LikeCollectDTO dto : likeList) {
-			CollectToBlog collect = collectToBlogDao.selectByBlogAndUser(dto.getBlogId(), dto.getUserId());
+			CollectToBlog collect = collectToBlogDao.selectByBlogAndUser(dto.getrecipeId(), dto.getUserId());
 			if (collect == null) {
-				collect = new CollectToBlog(dto.getBlogId(), dto.getUserId(), dto.getStatus());
+				collect = new CollectToBlog(dto.getrecipeId(), dto.getUserId(), dto.getStatus());
 				collectToBlogDao.insert(collect);
 			} else {
 				if (collect.getCollectStatus() == 1) {
@@ -155,13 +162,13 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 	}
 
 	@Override
-	public List<UserInfoDTO> getLikedByBlogId(Integer blogId) {
-		return likeToBlogDao.selectUserInfoByBlog(blogId);
+	public List<UserInfoDTO> getLikedByrecipeId(Integer recipeId) {
+		return likeToBlogDao.selectUserInfoByBlog(recipeId);
 	}
 
 	@Override
-	public List<UserInfoDTO> getCollectedByBlogId(Integer blogId) {
-		return collectToBlogDao.selectAllByBlogId(blogId);
+	public List<UserInfoDTO> getCollectedByrecipeId(Integer recipeId) {
+		return collectToBlogDao.selectUserByrecipeId(recipeId);
 	}
 
 }
