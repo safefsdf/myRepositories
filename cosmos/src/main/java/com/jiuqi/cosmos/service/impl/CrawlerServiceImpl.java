@@ -58,7 +58,6 @@ public class CrawlerServiceImpl {
 			classifyDao.insert(classifyOne);
 			System.out.println("One: "+classifyOne.toString());
 			Integer levelTwoPid = classifyOne.getClassifyId();
-
 			Elements div_sort_item = content.nextElementSibling().children();
 			for(Element con : div_sort_item) {
 				String twoTitle = con.select("h2").text();
@@ -69,7 +68,6 @@ public class CrawlerServiceImpl {
 				ClassifyInfo classifyTwo = new ClassifyInfo(twoTitle, levelTwoPid);
 				classifyDao.insert(classifyTwo);
 				System.out.println("Two: "+classifyTwo.toString());
-				
 				Integer levelThreePid = classifyTwo.getClassifyId();
 				Elements li = con.select("ul.sortlist").get(0).children();
 				for(Element l : li) {
@@ -132,19 +130,14 @@ public class CrawlerServiceImpl {
 	 */
 	public void getLastToRecipe(Document doc, Integer classifyPid) {
 		Elements urls = doc.select("div#content>div#left");
-
-		
 		try {
 			Element ele = urls.get(0);
 			// 食谱的封面图片
 			String coverImg = ele.select("#banner>a").attr("href");
-
 			// 食谱的标题
 			String recipeTitle = ele.select("div.rinfo>h1.title").text();
-
 			// 食谱介绍： ele.select("div.rinfo>p.intro").text();
 			String recipeIntro = ele.select("div.rinfo>p.intro").text();
-
 			// 用法用量
 			Elements recipeUsageEles = ele.select("div.metarial td");
 			Map<String, String> usageMap = new HashMap<String, String>();
@@ -152,11 +145,8 @@ public class CrawlerServiceImpl {
 				String usageMapKey = recipeUsageEle.select("span.scname").text();
 				String usageMapValue = recipeUsageEle.select("span.scnum").text();
 				usageMap.put(usageMapKey, usageMapValue);
-				
 			}
 			String recipeUsage = JSON.toJSONString(usageMap);
-
-			
 			// 用户的Id:获取用户图片的链接，解析，获取图片，获取昵称，获取个性签名，性别，地址，自定义账号密码，.get(0).select("div.author-info>a")
 			Elements userSelect = ele.select("div.rinfo>div.vcnum").next("div");
 			String userHref = userSelect.get(0).select("a.author-img").attr("href");
@@ -169,6 +159,12 @@ public class CrawlerServiceImpl {
 			StringBuffer sb;
 			// 食谱的步骤
 			Elements select = ele.select("div.step>div.stepcont");
+			String recipeTips = ele.select("div.tips>p").text();
+			
+			FoodRecipe recipe = new FoodRecipe(userId, classifyPid, coverImg,
+					recipeIntro, recipeTitle, recipeUsage, recipeTips);
+			foodRecipeDao.insert(recipe);
+			int recipeId = recipe.getRecipeId();
 			sb = new StringBuffer();
 			for (Element step : select) {
 				if(step.child(0)!=null) {
@@ -176,7 +172,7 @@ public class CrawlerServiceImpl {
 						String stepImgUrl = step.child(0).child(0).attr("src");
 						String stepTitle = step.child(0).child(0).attr("alt");
 						String stepDesc = step.child(1).text();
-						FoodStep foodStep = new FoodStep(stepTitle, stepImgUrl, stepDesc);
+						FoodStep foodStep = new FoodStep(recipeId, stepTitle, stepImgUrl, stepDesc);
 						foodStepDao.insert(foodStep);
 						sb.append(foodStep.getStepId());
 					}
@@ -184,11 +180,8 @@ public class CrawlerServiceImpl {
 			}
 			String recipeSteps = sb.toString();
 			// 食谱的小技巧
-			String recipeTips = ele.select("div.tips>p").text();
 			
-			FoodRecipe recipe = new FoodRecipe(userId, classifyPid, coverImg,
-					recipeIntro, recipeSteps, recipeTitle, recipeUsage, recipeTips);
-			foodRecipeDao.insert(recipe);
+			
 			System.out.println(recipe.toString());
 		} catch (Exception e) {
 			System.out.println("java.lang.IndexOutOfBoundsException: Index: 0, Size: 0");

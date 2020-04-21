@@ -1,26 +1,20 @@
 package com.jiuqi.cosmos.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.jiuqi.cosmos.constants.UserConstants;
 import com.jiuqi.cosmos.dao.ClassifyInfoMapper;
 import com.jiuqi.cosmos.dao.CollectToBlogMapper;
 import com.jiuqi.cosmos.dao.FoodRecipeMapper;
 import com.jiuqi.cosmos.dao.FoodStepMapper;
 import com.jiuqi.cosmos.dao.LikeToBlogMapper;
 import com.jiuqi.cosmos.entity.ClassifyInfo;
-import com.jiuqi.cosmos.entity.CollectToBlog;
 import com.jiuqi.cosmos.entity.FoodRecipe;
 import com.jiuqi.cosmos.entity.FoodStep;
-import com.jiuqi.cosmos.entity.LikeToBlog;
-import com.jiuqi.cosmos.pojo.UserInfoDTO;
 import com.jiuqi.cosmos.service.RecipeService;
-
-import io.netty.util.internal.StringUtil;
-
+@Service
 public class RecipeServiceImpl implements RecipeService {
 
 	@Autowired
@@ -40,13 +34,6 @@ public class RecipeServiceImpl implements RecipeService {
 	
 	@Override
 	public int insert(FoodRecipe recipe) {
-		List<FoodStep> steps = recipe.getSteps();
-		StringBuffer sb = new StringBuffer();
-		for (FoodStep step : steps) {
-			int insert = stepDao.insert(step);
-			sb.append(insert == 1 ? step.getStepId() : null);
-		}
-		recipe.setRecipeSteps(sb.toString());
 		return recipeDao.insert(recipe);
 	}
 
@@ -56,74 +43,30 @@ public class RecipeServiceImpl implements RecipeService {
 	 * 	删除某一条食谱：食谱表，步骤表，点赞表，收藏表。凡是跟食谱Id相关的表中的数据都要删除
 	 */
 	@Override
-	public String delete(Integer recipeId) {
-		FoodRecipe foodRecipe = recipeDao.selectByPrimaryKey(recipeId);
-		List<LikeToBlog> selectLikeByBlog = likeToBlogDao.selectLikeByBlog(recipeId);
-		for(LikeToBlog blog :selectLikeByBlog) {
-			Integer likeId = blog.getLikeId();
-			likeToBlogDao.deleteByPrimaryKey(likeId);
-		}
-		
-		List<CollectToBlog> selectCollectByBlog = collectToBlogDao.selectCollectByBlog(recipeId);
-		for(CollectToBlog blog :selectCollectByBlog) {
-			Integer collectId = blog.getCollectId();
-			collectToBlogDao.deleteByPrimaryKey(collectId);
-		}
-		
-		
-		int sum = 0;
-		if (foodRecipe != null) {
-			List<FoodStep> stepList = getStepsByRecipe(foodRecipe);
-			for (FoodStep ch : stepList) {
-				if (ch != null) {
-					sum += stepDao.deleteByPrimaryKey(ch.getStepId());
-				}
-			}
-			if (sum == stepList.size()) {
-				recipeDao.deleteByPrimaryKey(recipeId);
-				return UserConstants.RECIPE_DELETE_SUC;
-			} else {
-				return UserConstants.STEPS_DELETE_FAIL;// 01
-			}
-		} else {
-			return UserConstants.RECIPE_NOT_EXIST;// 00
+	public void delete(Integer recipeId) {
+		try {
+			recipeDao.deleteByPrimaryKey(recipeId);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public FoodRecipe selectByPrimaryKey(Integer recipeId) {
 		FoodRecipe foodRecipe = recipeDao.selectByPrimaryKey(recipeId);
-		if (foodRecipe != null) {
-			List<FoodStep> steps = getStepsByRecipe(foodRecipe);
-			foodRecipe.setSteps(steps);
-			return foodRecipe;
-		}
+		List<FoodStep> recipeSteps = stepDao.selectByRecipeId(recipeId);
+		foodRecipe.setRecipeSteps(recipeSteps);
 		return null;
 
 	}
-
-	private List<FoodStep> getStepsByRecipe(FoodRecipe foodRecipe) {
-		List<FoodStep> stepList = new ArrayList<FoodStep>();
-		String recipeSteps = foodRecipe.getRecipeSteps();
-		if (!StringUtil.isNullOrEmpty(recipeSteps)) {
-			char[] charArray = recipeSteps.toCharArray();
-
-			for (char ch : charArray) {
-				Integer stepId = Integer.valueOf(String.valueOf(ch));
-				FoodStep foodStep = stepDao.selectByPrimaryKey(stepId);
-				stepList.add(foodStep);
-			}
-			foodRecipe.setSteps(stepList);
-		}
-		return stepList;
-	}
+	
 
 	@Override
 	public List<FoodRecipe> selectByClassifyId(Integer classifyId) {
 		List<FoodRecipe> list = recipeDao.selectByClassifyId(classifyId);
 		for (FoodRecipe recipe : list) {
-			List<FoodStep> stepsByRecipe = getStepsByRecipe(recipe);
-			recipe.setSteps(stepsByRecipe);
+			List<FoodStep> stepsByRecipe = stepDao.selectByRecipeId(recipe.getRecipeId());
+			recipe.setRecipeSteps(stepsByRecipe);
 		}
 		return list;
 	}
@@ -132,8 +75,8 @@ public class RecipeServiceImpl implements RecipeService {
 	public List<FoodRecipe> selectByUserId(Integer userId) {
 		List<FoodRecipe> list = recipeDao.selectByUserId(userId);
 		for (FoodRecipe recipe : list) {
-			List<FoodStep> stepsByRecipe = getStepsByRecipe(recipe);
-			recipe.setSteps(stepsByRecipe);
+			List<FoodStep> stepsByRecipe = stepDao.selectByRecipeId(recipe.getRecipeId());
+			recipe.setRecipeSteps(stepsByRecipe);
 		}
 		return list;
 	}
@@ -151,5 +94,6 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 		return cataLevel1;
 	}
+
 
 }

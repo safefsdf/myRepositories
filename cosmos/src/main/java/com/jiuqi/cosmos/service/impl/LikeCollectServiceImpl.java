@@ -17,6 +17,7 @@ import com.jiuqi.cosmos.constants.UserConstants;
 import com.jiuqi.cosmos.dao.CollectToBlogMapper;
 import com.jiuqi.cosmos.dao.LikeToBlogMapper;
 import com.jiuqi.cosmos.entity.CollectToBlog;
+import com.jiuqi.cosmos.entity.FoodRecipe;
 import com.jiuqi.cosmos.entity.LikeToBlog;
 import com.jiuqi.cosmos.pojo.LikeCollectDTO;
 import com.jiuqi.cosmos.pojo.UserInfoDTO;
@@ -169,6 +170,16 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 	@Override
 	public List<UserInfoDTO> getCollectedByrecipeId(Integer recipeId) {
 		return collectToBlogDao.selectUserByrecipeId(recipeId);
+	}
+
+	@Override
+	public List<FoodRecipe> selectLikeListRecipeByUserId(Integer userId) {
+		return collectToBlogDao.selectLikeListRecipeByUserId(userId);
+	}
+
+	@Override
+	public List<FoodRecipe> selectColListRecipeByUserId(Integer userId) {
+		return collectToBlogDao.selectColListRecipeByUserId(userId);
 	}
 
 }

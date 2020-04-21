@@ -1,9 +1,10 @@
 package com.jiuqi.cosmos.dao;
 
-import com.jiuqi.cosmos.entity.CollectToBlog;
-import com.jiuqi.cosmos.pojo.UserInfoDTO;
-
 import java.util.List;
+
+import com.jiuqi.cosmos.entity.CollectToBlog;
+import com.jiuqi.cosmos.entity.FoodRecipe;
+import com.jiuqi.cosmos.pojo.UserInfoDTO;
 
 public interface CollectToBlogMapper {
 	/**
@@ -53,7 +54,8 @@ public interface CollectToBlogMapper {
      * @param recipeId
      * @return
      */
-    List<CollectToBlog> selectCollectByUser(Integer userId);
+    List<FoodRecipe> selectLikeListRecipeByUserId(Integer userId);
+    List<FoodRecipe> selectColListRecipeByUserId(Integer userId);
     /**
      *	 更新收藏状态
      * @param record

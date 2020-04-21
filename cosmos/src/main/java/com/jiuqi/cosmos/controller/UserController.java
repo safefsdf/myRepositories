@@ -1,5 +1,7 @@
 package com.jiuqi.cosmos.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,8 +14,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jiuqi.cosmos.constants.ResultEnum;
+import com.jiuqi.cosmos.dao.FoodStepMapper;
+import com.jiuqi.cosmos.entity.FoodRecipe;
+import com.jiuqi.cosmos.entity.FoodStep;
 import com.jiuqi.cosmos.entity.User;
 import com.jiuqi.cosmos.pojo.R;
+import com.jiuqi.cosmos.pojo.UserDTO;
+import com.jiuqi.cosmos.service.FocusService;
+import com.jiuqi.cosmos.service.LikeCollectService;
+import com.jiuqi.cosmos.service.RecipeService;
 import com.jiuqi.cosmos.service.UserService;
 import com.jiuqi.cosmos.util.MD5;
 import com.jiuqi.cosmos.util.RedisUtil;
@@ -29,7 +38,14 @@ public class UserController {
 	@Autowired
 	private RedisUtil redisService;
 	
-
+	@Autowired
+	private FocusService focusService;
+	@Autowired
+	private LikeCollectService likeCollectService;
+	@Autowired
+	private RecipeService recipeService;
+	@Autowired
+	private FoodStepMapper stepService;
 	/**
 	 * 使用手机号和密码登录
 	 * 
@@ -69,7 +85,7 @@ public class UserController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-//			 return error(ResultEnum.REG_ERROR.getCode(), ResultEnum.REG_ERROR.getMsg());
+			 return R.error(ResultEnum.REG_ERROR.getCode(),  "该用户已存在，"+ResultEnum.REG_ERROR.getMsg());
 		}
 		return null;
 		
@@ -134,6 +150,48 @@ public class UserController {
 			}
 		} catch (Exception e) {
 			return false;
+		}
+	}
+	/**
+	 *	获取用户资料
+	 * @param userid
+	 * @return
+	 */
+	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
+	public R getUserInfo(int userid) {
+		System.out.println("userid: "+userid);
+		UserDTO userDto = new UserDTO();
+		User byId;
+		try {
+			byId = userService.getById(userid);
+			if(byId==null) {
+				return R.error(ResultEnum.USER_NOT_EXIST.getCode(), ResultEnum.USER_NOT_EXIST.getMsg());
+			}
+			userDto.setUser(byId);
+			List<User> idolList = focusService.getFocusListByFocusPostId(userid);
+			List<User> funList = focusService.getFocusListByFocusUserId(userid);
+			userDto.setIdolUserList(idolList);
+			userDto.setFunUserList(funList);
+			userDto.setIdolCount(idolList.size());
+			userDto.setFunCount(funList.size());
+			List<FoodRecipe> likeRecipeList = likeCollectService.selectLikeListRecipeByUserId(userid);
+			for(FoodRecipe recipe : likeRecipeList) {
+				List<FoodStep> stepsByRecipe = stepService.selectByRecipeId(recipe.getRecipeId());
+				recipe.setRecipeSteps(stepsByRecipe);
+			}
+			
+			List<FoodRecipe> collectRecipeList = likeCollectService.selectColListRecipeByUserId(userid);
+			for(FoodRecipe recipe : collectRecipeList) {
+				List<FoodStep> stepsByRecipe = stepService.selectByRecipeId(recipe.getRecipeId());
+				recipe.setRecipeSteps(stepsByRecipe);
+			}
+			userDto.setCollectRecipeList(collectRecipeList);
+			userDto.setLikeRecipeList(likeRecipeList);
+			userDto.setLikeCount(likeRecipeList.size());
+			userDto.setCollectCount(collectRecipeList.size());
+			return new R<UserDTO>(ResultEnum.SUCCESS.getCode(),ResultEnum.SUCCESS.getMsg(),userDto);
+		} catch (Exception e) {
+			return R.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
 		}
 	}
 }

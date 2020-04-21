@@ -7,9 +7,6 @@
     <result column="classify_id" jdbcType="INTEGER" property="classifyId" />
     <result column="recipe_coverImg" jdbcType="VARCHAR" property="recipeCoverimg" />
     <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
-    <result column="recipe_steps" jdbcType="VARCHAR" property="recipeSteps" />
-    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
-    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
     <result column="recipe_title" jdbcType="LONGVARCHAR" property="recipeTitle" />
     <result column="recipe_intro" jdbcType="LONGVARCHAR" property="recipeIntro" />
     <result column="recipe_usage" jdbcType="LONGVARCHAR" property="recipeUsage" />
@@ -17,42 +14,39 @@
   </resultMap>
   <insert id="insert" parameterType="com.jiuqi.cosmos.entity.FoodRecipe" useGeneratedKeys="true" keyProperty="recipeId">
     insert into tb_food_recipe (recipe_id, user_id, classify_id, 
-      recipe_coverImg, createtime, recipe_steps, 
-      like_count, collect_count, recipe_title, 
+      recipe_coverImg, createtime, recipe_title, 
       recipe_usage, recipe_tips, recipe_intro)
     values (#{recipeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{classifyId,jdbcType=INTEGER}, 
-      #{recipeCoverimg,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{recipeSteps,jdbcType=VARCHAR}, 
-      #{likeCount,jdbcType=INTEGER}, #{collectCount,jdbcType=INTEGER}, #{recipeTitle,jdbcType=LONGVARCHAR}, 
+      #{recipeCoverimg,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{recipeTitle,jdbcType=LONGVARCHAR}, 
       #{recipeUsage,jdbcType=LONGVARCHAR}, #{recipeTips,jdbcType=LONGVARCHAR},  #{recipeIntro,jdbcType=LONGVARCHAR})
   </insert>
+  
   <select id="selectAll" resultMap="BaseResultMap">
-    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_steps, 
-    like_count, collect_count, recipe_title, recipe_usage, recipe_tips, recipeIntro 
+    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_title, recipe_usage, recipe_tips, recipeIntro 
     from tb_food_recipe
   </select>
+  
    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_steps, 
-    like_count, collect_count, recipe_title, recipe_usage, recipe_tips, recipeIntro 
+    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_title, recipe_usage, recipe_tips, recipeIntro 
     from tb_food_recipe
     where recipe_id = #{recipeId,jdbcType=INTEGER}
   </select>
+  
    <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_steps, 
-    like_count, collect_count, recipe_title, recipe_usage, recipe_tips, recipeIntro 
+    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_title, recipe_usage, recipe_tips, recipeIntro 
     from tb_food_recipe
     where user_id = #{userId,jdbcType=INTEGER}
     order by createtime desc
   </select>
   
   <select id="selectByClassifyId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_steps, 
-    like_count, collect_count, recipe_title, recipe_usage, recipe_tips, recipeIntro 
+    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_title, recipe_usage, recipe_tips, recipeIntro 
     from tb_food_recipe
     where classify_id = #{classifyId,jdbcType=INTEGER}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-  		delete from tb_food_recipe where recipe_id = #{recipeId,jdbcType=INTEGER}
+  		
   </delete>
   
   

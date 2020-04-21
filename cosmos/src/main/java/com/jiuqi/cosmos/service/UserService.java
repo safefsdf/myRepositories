@@ -20,11 +20,4 @@ public interface UserService {
 
 	List<User> getAll();
 
-	/**
-	 * 更新数据库中的粉丝量
-	 * 
-	 * @param user
-	 * @return
-	 */
-	int updateFocusCount(User user);
 }

@@ -19,7 +19,7 @@ public interface RecipeService {
 	 * @param recipeId
 	 * @return
 	 */
-	String delete(Integer recipeId);
+	void delete(Integer recipeId);
 	/**
 	 * 	根据recipeId查询FoodRecipe的信息
 	 * @param recipeId

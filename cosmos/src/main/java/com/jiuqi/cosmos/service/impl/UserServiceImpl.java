@@ -43,10 +43,6 @@ public class UserServiceImpl implements UserService {
 	public Integer deleteById(Integer userid) {
 		return userDao.deleteByPrimaryKey(userid);
 	}
-
-	@Override
-	public int updateFocusCount(User user) {
-		return userDao.updateFocusCount(user);
-	}
+ 
 
 }

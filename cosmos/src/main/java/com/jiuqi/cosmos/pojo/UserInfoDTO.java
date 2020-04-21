@@ -1,11 +1,18 @@
 package com.jiuqi.cosmos.pojo;
 
+import java.util.Date;
+
 public class UserInfoDTO {
 	private Integer userId;
+	private String phone;
 	private String nickname;
 	private String signature;
+	private String address;
+	
 	private String headimg;
 	private String coverimg;
+	private Date createtime;
+	private String sex;
 	private Integer focusCount;
 
 	public UserInfoDTO(Integer userId,  String nickname, String signature, String headimg,
@@ -21,8 +28,9 @@ public class UserInfoDTO {
 
 	@Override
 	public String toString() {
-		return "UserInfoDTO [userId=" + userId +  ", nickname=" + nickname + ", signature="
-				+ signature + ", headimg=" + headimg + ", coverimg=" + coverimg + ", focusCount=" + focusCount + "]";
+		return "UserInfoDTO [userId=" + userId + ", phone=" + phone + ", nickname=" + nickname + ", signature="
+				+ signature + ", address=" + address + ", headimg=" + headimg + ", coverimg=" + coverimg
+				+ ", createtime=" + createtime + ", sex=" + sex + ", focusCount=" + focusCount + "]";
 	}
 
 	public Integer getUserId() {
@@ -77,6 +85,38 @@ public class UserInfoDTO {
 
 	public void setFocusCount(Integer focusCount) {
 		this.focusCount = focusCount;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Date getCreatetime() {
+		return createtime;
+	}
+
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 
 }

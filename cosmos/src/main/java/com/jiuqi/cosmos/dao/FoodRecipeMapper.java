@@ -6,7 +6,7 @@ import com.jiuqi.cosmos.entity.FoodRecipe;
 
 public interface FoodRecipeMapper {
     int insert(FoodRecipe record);
-
+    
     List<FoodRecipe> selectAll();
     
     int deleteByPrimaryKey(Integer recipeId);

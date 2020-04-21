@@ -2,14 +2,26 @@ package com.jiuqi.cosmos.entity;
 
 public class FoodStep {
     private Integer stepId;
+    
+    private Integer recipeId;
 
     private String stepTitle;
 
     private String stepImg;
 
     private String stepDescription;
+    
+    
 
-    public Integer getStepId() {
+    public Integer getRecipeId() {
+		return recipeId;
+	}
+
+	public void setRecipeId(Integer recipeId) {
+		this.recipeId = recipeId;
+	}
+
+	public Integer getStepId() {
         return stepId;
     }
 
@@ -41,10 +53,12 @@ public class FoodStep {
         this.stepDescription = stepDescription == null ? null : stepDescription.trim();
     }
 
+ 
+
 	@Override
 	public String toString() {
-		return "FoodStep [stepId=" + stepId + ", stepTitle=" + stepTitle + ", stepImg=" + stepImg + ", stepDescription="
-				+ stepDescription + "]";
+		return "FoodStep [stepId=" + stepId + ", recipeId=" + recipeId + ", stepTitle=" + stepTitle + ", stepImg="
+				+ stepImg + ", stepDescription=" + stepDescription + "]";
 	}
 
 	public FoodStep(Integer stepId, String stepTitle, String stepImg, String stepDescription) {
@@ -57,11 +71,11 @@ public class FoodStep {
 
 	public FoodStep() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public FoodStep(String stepTitle, String stepImg, String stepDescription) {
+	public FoodStep(int recipeId, String stepTitle, String stepImg, String stepDescription) {
 		super();
+		this.recipeId = recipeId;
 		this.stepTitle = stepTitle;
 		this.stepImg = stepImg;
 		this.stepDescription = stepDescription;

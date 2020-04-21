@@ -23,13 +23,22 @@ public class User {
 
     private String sex;
 
-    private Integer focusCount;
+    private Integer focusCount;//userId关注的人的列表
+    private Integer funCount;//userId的粉丝数量
 
     private String signature;
     private String token;
     
 
-    public String getToken() {
+    public Integer getFunCount() {
+		return funCount;
+	}
+
+	public void setFunCount(Integer funCount) {
+		this.funCount = funCount;
+	}
+
+	public String getToken() {
 		return token;
 	}
 
@@ -108,9 +117,6 @@ public class User {
     public void setSex(String sex) {
         this.sex = sex == null ? null : sex.trim();
     }
-
-     
-
     public String getAddress() {
 		return address;
 	}
@@ -134,15 +140,6 @@ public class User {
     public void setSignature(String signature) {
         this.signature = signature == null ? null : signature.trim();
     }
-
-	@Override
-	public String toString() {
-		return "User [userid=" + userId + ", phone=" + phone + ", password=" + password + ", answer=" + answer
-				+ ", nickname=" + nickname + ", address=" + address + ", headimg=" + headimg + ", coverimg=" + coverimg
-				+ ", createtime=" + createtime + ", sex=" + sex + ", focuscount=" + focusCount + ", signature="
-				+ signature + ", token=" + token + "]";
-	}
-
 	public User(String phone, String password, String nickname, String headimg, String coverimg, Date createtime,
 			String sex, String signature) {
 		super();

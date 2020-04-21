@@ -14,8 +14,6 @@ public interface UserDao {
 	 */
 	int insert(User user);
 
-	
-	
 	/**
 	 * 注销
 	 * 
@@ -24,23 +22,8 @@ public interface UserDao {
 	 */
 	int deleteByPrimaryKey(Integer userId);
 
-	/**
-	 * 更新数据库中的粉丝量
-	 * 
-	 * @param user
-	 * @return
-	 */
-	int updateFocusCount(User user);
-	
 	int updateByPrimaryKey(User user);
 
-	/**
-	 * 修改信息
-	 * 
-	 * @param userid
-	 * @return
-	 */
-//	 int updateUserinfo(User user);
 	/**
 	 * 登录时根据手机号和密码查询
 	 * 
@@ -72,13 +55,16 @@ public interface UserDao {
 	 * @return
 	 */
 	List<User> getAll();
-	
+
 	/**
-	 *	 查询所关注的用户发送的食谱集合
+	 * 查询所关注的用户发送的食谱集合
+	 * 
 	 * @param userId
 	 * @return
 	 */
 	List<FoodRecipe> selectFoodRecipeByUser(Integer focusPostId);
+
 	List<FoodRecipe> selectRecipeFromLike(Integer userId);
+
 	List<FoodRecipe> selectRecipeFromCollect(Integer userId);
 }

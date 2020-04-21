@@ -12,7 +12,6 @@
     <result column="coverimg" jdbcType="VARCHAR" property="coverimg" />
     <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="sex" jdbcType="CHAR" property="sex" />
-    <result column="focus_count" jdbcType="INTEGER" property="focusCount" />
     <result column="signature" jdbcType="LONGVARCHAR" property="signature" />
   </resultMap>
   <resultMap id="BaseRecipeResultMap" type="com.jiuqi.cosmos.entity.FoodRecipe">
@@ -21,29 +20,22 @@
     <result column="classify_id" jdbcType="INTEGER" property="classifyId" />
     <result column="recipe_coverImg" jdbcType="VARCHAR" property="recipeCoverimg" />
     <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
-    <result column="recipe_steps" jdbcType="VARCHAR" property="recipeSteps" />
-    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
-    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
     <result column="recipe_title" jdbcType="LONGVARCHAR" property="recipeTitle" />
     <result column="recipe_intro" jdbcType="LONGVARCHAR" property="recipeIntro" />
     <result column="recipe_usage" jdbcType="LONGVARCHAR" property="recipeUsage" />
     <result column="recipe_tips" jdbcType="LONGVARCHAR" property="recipeTips" />
   </resultMap>
-	<!-- <insert id="createUser" parameterType="com.jiuqi.cosmos.entity.User">
-	有默认值的需要存入对应的默认值：昵称，个性签名，头像，封面
-		insert into tb_user
-		values(null,#{phone},#{password},#{answer},'随风飘摇', '人生不是在吃就是在去吃的路上', null,null,now(),null,null,0)
-	</insert> -->
+	 
 	 <insert id="insert" parameterType="com.jiuqi.cosmos.entity.User"  useGeneratedKeys="true" keyProperty="userId">
     insert into tb_user (user_id, phone, password, 
       answer, nickname, address, 
       headimg, coverimg, createtime, 
-      sex, focus_count, signature
+      sex, signature
       )
     values (#{userId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{answer,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{headimg,jdbcType=VARCHAR}, #{coverimg,jdbcType=VARCHAR}, now(), 
-      #{sex,jdbcType=CHAR}, #{focusCount,jdbcType=INTEGER}, #{signature,jdbcType=LONGVARCHAR}
+      #{sex,jdbcType=CHAR},  #{signature,jdbcType=LONGVARCHAR}
       )
   </insert>
    <update id="updateByPrimaryKey" parameterType="com.jiuqi.cosmos.entity.User">
@@ -57,17 +49,15 @@
       coverimg = #{coverimg,jdbcType=VARCHAR},
       createtime = #{createtime,jdbcType=TIMESTAMP},
       sex = #{sex,jdbcType=CHAR},
-      focus_count = #{focusCount,jdbcType=INTEGER},
       signature = #{signature,jdbcType=LONGVARCHAR}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
-	<update id="updateFocusCount">
-		update tb_user set focusCount = #{focusCount} where user_id = #{userId}
-	</update>
+	 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_user
     where user_id = #{userId,jdbcType=INTEGER}
   </delete>
+  
 	<!-- 根据id只查询相应的数据 -->
 	<select id="quaryByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
 		select * from tb_user where phone=#{phone}

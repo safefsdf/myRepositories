@@ -1,6 +1,5 @@
 package com.jiuqi.cosmos.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -71,18 +70,10 @@ public class FocusController {
 	 * @param focusUserId
 	 * @return userList的列表
 	 */
-	@RequestMapping("/getMyFun")
 	public R<User> getFocusfun(int focusUserId) {
 		try {
-			List<User> userList = new ArrayList<User>();
-			List<FocusInfo> focusList = focusService.getFocusListByFocusUserId(focusUserId);
-			for (FocusInfo info : focusList) {
-				int funId = info.getFocusPostId();
-				User funUser = userService.getById(funId);
-				if (funUser != null) {
-					userList.add(funUser);
-				}
-			}
+			List<User> userList = focusService.getFocusListByFocusUserId(focusUserId);
+			 
 			return R.success(userList, ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
 		} catch (Exception e) {
 			return R.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
@@ -100,20 +91,8 @@ public class FocusController {
 	 */
 	@RequestMapping("/getMyIdol")
 	public R<User> getMyFocus(int focusPostId) {
-		try {
-			List<User> userList = new ArrayList<User>();
-			List<FocusInfo> focusList = focusService.getFocusListByFocusPostId(focusPostId);
-			for (FocusInfo info : focusList) {
-				int funId = info.getFocusUserId();
-				User idolUser = userService.getById(funId);
-				if (idolUser != null) {
-					userList.add(idolUser);
-				}
-			}
-			return R.success(userList, ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
-		} catch (Exception e) {
-			return R.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
-		}
+		 
+		return R.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
 	}
 
 	

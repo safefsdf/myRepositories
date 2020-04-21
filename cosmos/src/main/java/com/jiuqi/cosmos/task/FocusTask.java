@@ -24,7 +24,6 @@ public class FocusTask extends QuartzJobBean {
 
 		// 将 Redis 里的点赞信息同步到数据库里
 		focusService.transFocusFromRedis2DB();
-		focusService.transFocusCountFromRedis2DB();
 		//点赞收藏的数量为更新到数据库中
 		likeCollectService.transLikeFromRedis2DB();
 		likeCollectService.transCollectFromRedis2DB();

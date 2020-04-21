@@ -13,7 +13,7 @@ spring:
     name: cosmos
   redis:
       database: 0
-      host: 192.168.122.1
+      host: 39.101.186.6
       port: 6666
       password: 111111
       timeout: 5000
@@ -33,14 +33,14 @@ spring:
       true
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/cosmos?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+    url: jdbc:mysql://39.101.186.6:3306/cosmos?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
     username: root
     password: 111111
     driver-class-name:  com.mysql.cj.jdbc.Driver
   data:
     elasticsearch:
-     cluster-name:  elasticsearch
-     cluster-nodes: 192.168.122.1:9300
+     cluster-name:  my-application
+     cluster-nodes: 39.101.186.6:9300
      repositories:
         enabled: true
      transport-client: client-transport-sniff="false" 

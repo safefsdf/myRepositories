@@ -7,9 +7,5 @@ import com.jiuqi.cosmos.entity.FoodStep;
 public interface FoodStepMapper {
 	int insert(FoodStep record);
 	 
-	int deleteByPrimaryKey(Integer stepId);
-	
-    List<FoodStep> selectAll();
-    
-    FoodStep selectByPrimaryKey(Integer stepId);
+	List<FoodStep> selectByRecipeId(Integer recipeId);
 }

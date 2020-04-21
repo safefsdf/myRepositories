@@ -3,6 +3,7 @@ package com.jiuqi.cosmos.service;
 import java.util.List;
 
 import com.jiuqi.cosmos.entity.FocusInfo;
+import com.jiuqi.cosmos.entity.User;
 
 
 public interface FocusService {
@@ -17,7 +18,7 @@ public interface FocusService {
      * @param pageable
      * @return
      */
-    List<FocusInfo> getFocusListByFocusUserId(Integer focusUserId);
+    List<User> getFocusListByFocusUserId(Integer focusUserId);
 
     /**mysql
      * 
@@ -28,7 +29,7 @@ public interface FocusService {
      * @param pageable
      * @return	UserLike- id likedUserId likedPostId status=1
      */
-    List<FocusInfo> getFocusListByFocusPostId(Integer focusPostId );
+    List<User> getFocusListByFocusPostId(Integer focusPostId );
 
     /**mysql
      * 
@@ -44,8 +45,4 @@ public interface FocusService {
      */
     void transFocusFromRedis2DB();
 
-    /**
-     * 将Redis中的点赞数量数据存入数据库  -- 批量定时存入
-     */
-    void transFocusCountFromRedis2DB();
 }

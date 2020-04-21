@@ -2,6 +2,7 @@ package com.jiuqi.cosmos.service;
 
 import java.util.List;
 
+import com.jiuqi.cosmos.entity.FoodRecipe;
 import com.jiuqi.cosmos.pojo.LikeCollectDTO;
 import com.jiuqi.cosmos.pojo.UserInfoDTO;
 
@@ -49,5 +50,6 @@ public interface LikeCollectService {
 	 */
 	public boolean unlikeToblogToRedis(LikeCollectDTO likeCollectDTO);
 
-
+	 List<FoodRecipe> selectLikeListRecipeByUserId(Integer userId);
+	 List<FoodRecipe> selectColListRecipeByUserId(Integer userId);
 }

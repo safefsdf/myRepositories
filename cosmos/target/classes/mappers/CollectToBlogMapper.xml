@@ -18,6 +18,20 @@
 	    <result column="focusCount" jdbcType="INTEGER" property="focusCount" />
 	    <result column="signature" jdbcType="LONGVARCHAR" property="signature" />
 	</resultMap>
+	 <resultMap id="RecipeResultMap" type="com.jiuqi.cosmos.entity.FoodRecipe">
+    <result column="recipe_id" jdbcType="INTEGER" property="recipeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="classify_id" jdbcType="INTEGER" property="classifyId" />
+    <result column="recipe_coverImg" jdbcType="VARCHAR" property="recipeCoverimg" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="recipe_steps" jdbcType="VARCHAR" property="recipeSteps" />
+    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
+    <result column="recipe_title" jdbcType="LONGVARCHAR" property="recipeTitle" />
+    <result column="recipe_intro" jdbcType="LONGVARCHAR" property="recipeIntro" />
+    <result column="recipe_usage" jdbcType="LONGVARCHAR" property="recipeUsage" />
+    <result column="recipe_tips" jdbcType="LONGVARCHAR" property="recipeTips" />
+  </resultMap>
 	<delete id="deleteByPrimaryKey"
 		parameterType="java.lang.Integer">
 		delete from tb_collect
@@ -51,11 +65,45 @@
 		where recipe_id = #{recipeId,jdbcType=INTEGER} and user_id =
 		#{userId,jdbcType=INTEGER}
 	</select>
-	<select id="selectCollectByUser"
-		parameterType="java.lang.Integer" resultMap="BaseResultMap">
-		select collect_id, recipe_id, user_id, collect_status
-		from tb_collect
-		where user_id =	#{userId,jdbcType=INTEGER}
+	<select id="selectColListRecipeByUserId"
+		parameterType="java.lang.Integer" resultMap="RecipeResultMap">
+		SELECT
+			c.recipe_id as recipe_id,
+			c.user_id as user_id,
+			f.classify_id as classify_id,
+			f.recipe_title as recipe_title,
+			f.recipe_coverimg as recipe_coverimg,
+			f.recipe_intro as recipe_intro,
+			f.recipe_usage as recipe_usage,
+			f.createtime as createtime, 
+			f.recipe_steps as recipe_steps,
+			f.recipe_tips as recipe_tips
+		FROM
+			tb_collect AS c
+		LEFT JOIN tb_food_recipe AS f ON c.recipe_id = f.recipe_id
+		WHERE
+			c.user_id = #{userId,jdbcType=INTEGER}
+		AND c.collect_status = 1
+	</select>
+	<select id="selectLikeListRecipeByUserId"
+		parameterType="java.lang.Integer" resultMap="RecipeResultMap">
+		SELECT
+			l.recipe_id as recipe_id,
+			l.user_id as user_id,
+			f.classify_id as classify_id,
+			f.recipe_title as recipe_title,
+			f.recipe_coverimg as recipe_coverimg,
+			f.recipe_intro as recipe_intro,
+			f.recipe_usage as recipe_usage,
+			f.createtime as createtime, 
+			f.recipe_steps as recipe_steps,
+			f.recipe_tips as recipe_tips
+		FROM
+			tb_like AS l
+		LEFT JOIN tb_food_recipe AS f ON l.recipe_id = f.recipe_id
+		WHERE
+			l.user_id = #{userId,jdbcType=INTEGER}
+		AND l.like_status = 1
 	</select>
 	<select id="selectCollectByBlog"
 		parameterType="java.lang.Integer" resultMap="BaseResultMap">

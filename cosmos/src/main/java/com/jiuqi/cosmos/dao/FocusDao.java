@@ -3,6 +3,7 @@ package com.jiuqi.cosmos.dao;
 import java.util.List;
 
 import com.jiuqi.cosmos.entity.FocusInfo;
+import com.jiuqi.cosmos.entity.User;
 
 public interface FocusDao {
 
@@ -23,14 +24,14 @@ public interface FocusDao {
 	 * @param focusUserId
 	 * @return
 	 */
-	List<FocusInfo> findByFocusUserId(Integer focusUserId);
+	List<User> findByFocusUserId(Integer focusUserId);
 
 	/**
 	 * 从mysql中查询（ focusPostId关注了谁）
 	 * @param focusPostId
 	 * @return
 	 */
-	List<FocusInfo> findByFocusPostId(Integer focusPostId);
+	List<User> findByFocusPostId(Integer focusPostId);
 
 	/**
 	 * 查询该数据是否存在

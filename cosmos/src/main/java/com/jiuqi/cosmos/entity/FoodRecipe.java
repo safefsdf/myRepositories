@@ -17,10 +17,9 @@ public class FoodRecipe {
     
     private String recipeIntro;
     
-
     private Date createtime;
 
-    private String recipeSteps;
+    private List<FoodStep> recipeSteps;
 
     private Integer likeCount;
 
@@ -32,7 +31,6 @@ public class FoodRecipe {
 
     private String recipeTips;
     
-    private List<FoodStep> steps;
     
     private LikeCollectDTO likeCollectDto;
     
@@ -54,22 +52,13 @@ public class FoodRecipe {
 		this.userDto = userDto;
 	}
 
-	public List<FoodStep> getSteps() {
-		return steps;
-	}
-
-	public void setSteps(List<FoodStep> steps) {
-		this.steps = steps;
-	}
-
-	public FoodRecipe(Integer userId, Integer classifyId, String recipeCoverimg, String recipeIntro, String recipeSteps,
+	public FoodRecipe(Integer userId, Integer classifyId, String recipeCoverimg, String recipeIntro, 
 			String recipeTitle, String recipeUsage, String recipeTips) {
 		super();
 		this.userId = userId;
 		this.classifyId = classifyId;
 		this.recipeCoverimg = recipeCoverimg;
 		this.recipeIntro = recipeIntro;
-		this.recipeSteps = recipeSteps;
 		this.recipeTitle = recipeTitle;
 		this.recipeUsage = recipeUsage;
 		this.recipeTips = recipeTips;
@@ -77,7 +66,6 @@ public class FoodRecipe {
 
 	public FoodRecipe() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -85,7 +73,8 @@ public class FoodRecipe {
 		return "FoodRecipe [recipeId=" + recipeId + ", userId=" + userId + ", classifyId=" + classifyId
 				+ ", recipeCoverimg=" + recipeCoverimg + ", recipeIntro=" + recipeIntro + ", createtime=" + createtime
 				+ ", recipeSteps=" + recipeSteps + ", likeCount=" + likeCount + ", collectCount=" + collectCount
-				+ ", recipeTitle=" + recipeTitle + ", recipeUsage=" + recipeUsage + ", recipeTips=" + recipeTips + "]";
+				+ ", recipeTitle=" + recipeTitle + ", recipeUsage=" + recipeUsage + ", recipeTips=" + recipeTips
+				+ ", likeCollectDto=" + likeCollectDto + ", userDto=" + userDto + "]";
 	}
 
 	public String getRecipeIntro() {
@@ -136,12 +125,12 @@ public class FoodRecipe {
         this.createtime = createtime;
     }
 
-    public String getRecipeSteps() {
+    public List<FoodStep> getRecipeSteps() {
         return recipeSteps;
     }
 
-    public void setRecipeSteps(String recipeSteps) {
-        this.recipeSteps = recipeSteps == null ? null : recipeSteps.trim();
+    public void setRecipeSteps(List<FoodStep> recipeSteps) {
+        this.recipeSteps = recipeSteps;
     }
 
     public Integer getLikeCount() {
