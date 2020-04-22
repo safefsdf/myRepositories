@@ -17,7 +17,7 @@
       recipe_coverImg, createtime, recipe_title, 
       recipe_usage, recipe_tips, recipe_intro)
     values (#{recipeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{classifyId,jdbcType=INTEGER}, 
-      #{recipeCoverimg,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{recipeTitle,jdbcType=LONGVARCHAR}, 
+      #{recipeCoverimg,jdbcType=VARCHAR}, now(), #{recipeTitle,jdbcType=LONGVARCHAR}, 
       #{recipeUsage,jdbcType=LONGVARCHAR}, #{recipeTips,jdbcType=LONGVARCHAR},  #{recipeIntro,jdbcType=LONGVARCHAR})
   </insert>
   

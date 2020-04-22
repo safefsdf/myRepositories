@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Configuration
 @EnableCaching // 开启缓存
 public class RedisConfig extends CachingConfigurerSupport {
+	@Override
 	@Bean
 	public KeyGenerator keyGenerator() {
 		return new KeyGenerator() {

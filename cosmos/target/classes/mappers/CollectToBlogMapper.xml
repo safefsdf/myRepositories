@@ -15,7 +15,6 @@
 		<result column="nickname" jdbcType="VARCHAR" property="nickname" />
 	    <result column="headimg" jdbcType="VARCHAR" property="headimg" />
 	    <result column="coverimg" jdbcType="VARCHAR" property="coverimg" />
-	    <result column="focusCount" jdbcType="INTEGER" property="focusCount" />
 	    <result column="signature" jdbcType="LONGVARCHAR" property="signature" />
 	</resultMap>
 	 <resultMap id="RecipeResultMap" type="com.jiuqi.cosmos.entity.FoodRecipe">
@@ -24,9 +23,6 @@
     <result column="classify_id" jdbcType="INTEGER" property="classifyId" />
     <result column="recipe_coverImg" jdbcType="VARCHAR" property="recipeCoverimg" />
     <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
-    <result column="recipe_steps" jdbcType="VARCHAR" property="recipeSteps" />
-    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
-    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
     <result column="recipe_title" jdbcType="LONGVARCHAR" property="recipeTitle" />
     <result column="recipe_intro" jdbcType="LONGVARCHAR" property="recipeIntro" />
     <result column="recipe_usage" jdbcType="LONGVARCHAR" property="recipeUsage" />
@@ -76,7 +72,6 @@
 			f.recipe_intro as recipe_intro,
 			f.recipe_usage as recipe_usage,
 			f.createtime as createtime, 
-			f.recipe_steps as recipe_steps,
 			f.recipe_tips as recipe_tips
 		FROM
 			tb_collect AS c
@@ -96,7 +91,6 @@
 			f.recipe_intro as recipe_intro,
 			f.recipe_usage as recipe_usage,
 			f.createtime as createtime, 
-			f.recipe_steps as recipe_steps,
 			f.recipe_tips as recipe_tips
 		FROM
 			tb_like AS l
@@ -119,8 +113,7 @@
 			u.nickname,
 			u.signature,
 			u.headimg,
-			u.coverimg,
-			u.focusCount
+			u.coverimg
 		FROM
 			tb_user AS u
 			LEFT JOIN tb_collect AS c ON u.user_id = c.user_id

@@ -24,7 +24,7 @@ public class SimpleCORSFilter {
 	public CorsFilter corsFilter() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", buildConfig());
-		return new CorsFilter((CorsConfigurationSource) source);// 4
+		return new CorsFilter(source);// 4
 	}
 
 //	@SuppressWarnings({ "rawtypes", "unchecked" })

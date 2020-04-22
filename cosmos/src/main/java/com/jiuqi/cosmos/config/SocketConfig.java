@@ -37,11 +37,13 @@ public class SocketConfig implements WebSocketMessageBrokerConfigurer {
 	}
 
 	// 配置客户端进入通道
+	@Override
 	public void configureClientInboundChannel(ChannelRegistration registration) {
 		registration.interceptors(new SocketChannelIntecepter());
 	}
 
 	// 配置客户端退出通道
+	@Override
 	public void configureClientOutboundChannel(ChannelRegistration registration) {
 		registration.interceptors(new SocketChannelIntecepter());
 	}

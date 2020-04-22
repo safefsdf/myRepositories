@@ -2,22 +2,15 @@ package com.jiuqi.cosmos;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.alibaba.fastjson.JSON;
-import com.jiuqi.cosmos.constants.UserConstants;
 import com.jiuqi.cosmos.util.HttpUtils;
 
 
