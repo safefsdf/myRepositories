@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.jiuqi.cosmos.pojo.LikeCollectDTO;
-import com.jiuqi.cosmos.pojo.UserInfoDTO;
 
 public class FoodRecipe {
     private Integer recipeId;
@@ -34,7 +33,7 @@ public class FoodRecipe {
     
     private LikeCollectDTO likeCollectDto;
     
-    private UserInfoDTO userDto;
+    private User userDto;
 
     public LikeCollectDTO getLikeCollectDto() {
 		return likeCollectDto;
@@ -44,11 +43,11 @@ public class FoodRecipe {
 		this.likeCollectDto = likeCollectDto;
 	}
 
-	public UserInfoDTO getUserDto() {
+	public User getUserDto() {
 		return userDto;
 	}
 
-	public void setUserDto(UserInfoDTO userDto) {
+	public void setUserDto(User userDto) {
 		this.userDto = userDto;
 	}
 

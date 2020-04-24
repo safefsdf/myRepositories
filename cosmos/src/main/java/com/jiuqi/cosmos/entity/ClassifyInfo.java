@@ -10,8 +10,6 @@ public class ClassifyInfo {
 
     private Integer classifyPid;
 
-    private Integer classifyType;
-    
     private List<ClassifyInfo> sonList;
     
     public List<ClassifyInfo> getSonList() {
@@ -20,17 +18,6 @@ public class ClassifyInfo {
 
 	public void setSonList(List<ClassifyInfo> sonList) {
 		this.sonList = sonList;
-	}
-
-	public ClassifyInfo() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public String toString() {
-		return "ClassifyInfo [classifyId=" + classifyId + ", classifyName=" + classifyName + ", classifyPid="
-				+ classifyPid + "]";
 	}
 
 	public Integer getClassifyId() {
@@ -56,28 +43,26 @@ public class ClassifyInfo {
     public void setClassifyPid(Integer classifyPid) {
         this.classifyPid = classifyPid;
     }
-
-    public Integer getClassifyType() {
-        return classifyType;
-    }
-
-    public void setClassifyType(Integer classifyType) {
-        this.classifyType = classifyType;
-    }
-
-	public ClassifyInfo(String classifyName, Integer classifyPid) {
-		super();
-		this.classifyName = classifyName;
-		this.classifyPid = classifyPid;
-	}
-
-	public ClassifyInfo(Integer classifyId, String classifyName, Integer classifyPid, Integer classifyType) {
+    
+    public ClassifyInfo(Integer classifyId, String classifyName, Integer classifyPid) {
 		super();
 		this.classifyId = classifyId;
 		this.classifyName = classifyName;
 		this.classifyPid = classifyPid;
-		this.classifyType = classifyType;
 	}
-    
+
+	public ClassifyInfo(String classifyName, Integer classifyPid) {
+		this(null, classifyName, classifyPid);
+	}
+
+	public ClassifyInfo() {
+		super();
+	}
+
+	@Override
+	public String toString() {
+		return "ClassifyInfo [classifyId=" + classifyId + ", classifyName=" + classifyName + ", classifyPid="
+				+ classifyPid + ", sonList=" + sonList + "]";
+	}
 
 }

@@ -83,6 +83,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public List<ClassifyInfo> selectClassifies() {
+		
 		List<ClassifyInfo> cataLevel1 = classifyDao.selectByClassifyPid(0);
 		for(ClassifyInfo cata:cataLevel1) {
 			List<ClassifyInfo> cataLevel2 = classifyDao.selectByClassifyPid(cata.getClassifyId());
@@ -94,6 +95,4 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 		return cataLevel1;
 	}
-
-
 }

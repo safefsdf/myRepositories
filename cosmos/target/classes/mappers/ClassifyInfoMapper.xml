@@ -22,7 +22,7 @@
   </select>
   
   
-   <select id="selectByClassifyPid" parameterType="java.lang.String" resultMap="BaseResultMap">
+   <select id="selectByClassifyPid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select classify_id, classify_name, classify_pid
     from tb_classify
     where classify_pid = #{classifyPid,jdbcType=VARCHAR}

@@ -158,7 +158,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
-	public R getUserInfo(int userid) {
+	public R<UserDTO> getUserInfo(int userid) {
 		System.out.println("userid: "+userid);
 		UserDTO userDto = new UserDTO();
 		User byId;
@@ -178,12 +178,14 @@ public class UserController {
 			for(FoodRecipe recipe : likeRecipeList) {
 				List<FoodStep> stepsByRecipe = stepService.selectByRecipeId(recipe.getRecipeId());
 				recipe.setRecipeSteps(stepsByRecipe);
+				recipe.setUserDto(userService.getById(recipe.getUserId()));
 			}
 			
 			List<FoodRecipe> collectRecipeList = likeCollectService.selectColListRecipeByUserId(userid);
 			for(FoodRecipe recipe : collectRecipeList) {
 				List<FoodStep> stepsByRecipe = stepService.selectByRecipeId(recipe.getRecipeId());
 				recipe.setRecipeSteps(stepsByRecipe);
+				recipe.setUserDto(userService.getById(recipe.getUserId()));
 			}
 			userDto.setCollectRecipeList(collectRecipeList);
 			userDto.setLikeRecipeList(likeRecipeList);
