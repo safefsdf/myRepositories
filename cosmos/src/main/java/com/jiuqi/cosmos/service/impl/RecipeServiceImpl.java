@@ -1,5 +1,7 @@
 package com.jiuqi.cosmos.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,10 @@ import com.jiuqi.cosmos.dao.LikeToBlogMapper;
 import com.jiuqi.cosmos.entity.ClassifyInfo;
 import com.jiuqi.cosmos.entity.FoodRecipe;
 import com.jiuqi.cosmos.entity.FoodStep;
+import com.jiuqi.cosmos.pojo.AidInfo;
 import com.jiuqi.cosmos.service.RecipeService;
+import com.jiuqi.cosmos.util.ComparatorOuter;
+import com.jiuqi.cosmos.util.RecipeUtil;
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
@@ -56,7 +61,7 @@ public class RecipeServiceImpl implements RecipeService {
 		FoodRecipe foodRecipe = recipeDao.selectByPrimaryKey(recipeId);
 		List<FoodStep> recipeSteps = stepDao.selectByRecipeId(recipeId);
 		foodRecipe.setRecipeSteps(recipeSteps);
-		return null;
+		return foodRecipe;
 
 	}
 	
@@ -82,17 +87,67 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public List<ClassifyInfo> selectClassifies() {
-		
-		List<ClassifyInfo> cataLevel1 = classifyDao.selectByClassifyPid(0);
-		for(ClassifyInfo cata:cataLevel1) {
-			List<ClassifyInfo> cataLevel2 = classifyDao.selectByClassifyPid(cata.getClassifyId());
-			cata.setSonList(cataLevel1);
-			for(ClassifyInfo catalevel2:cataLevel2) {
-				List<ClassifyInfo> cataLevel3 = classifyDao.selectByClassifyPid(catalevel2.getClassifyId());
-				catalevel2.setSonList(cataLevel3);
-			}
-		}
-		return cataLevel1;
+	public List<ClassifyInfo> selectByClassifyPid(Integer classifyPid) {
+		return classifyDao.selectByClassifyPid(classifyPid);
 	}
+	
+	/**
+	 * 1.点赞表和收藏表,通过用户主键关联,然后根据用户Id获取该用户点赞或收藏的博客主键集合
+	 * 2.根据1的博客主键,获取该主键对应类别下的博客信息
+	 * @param userId
+	 * @return
+	 */
+	public List<FoodRecipe> getRecipeListByUserId(Integer userId){
+		List<FoodRecipe> newList = new ArrayList<FoodRecipe>();
+		List<AidInfo> selectReciIdByUid = recipeDao.selectReciIdByUid(userId);
+		List<Integer> recipeIdList = new ArrayList<Integer>();
+		for (AidInfo info : selectReciIdByUid) {
+			if (recipeIdList.contains(info.getCrecipeId()))
+				continue;
+			recipeIdList.add(info.getCrecipeId());
+			if (recipeIdList.contains(info.getLrecipeId()))
+				continue;
+			recipeIdList.add(info.getLrecipeId());
+		}
+		//与该用户有关的食谱ID，对应分类下的其他食谱集合
+		
+		for (Integer i : recipeIdList) {
+			List<FoodRecipe> recipeList = recipeDao.selectRecipeListByOtherRecipe(i);
+			RecipeUtil.bianli(recipeList, newList);
+		}
+		return newList;
+		
+	}
+	@Override
+	public List<FoodRecipe> getRelateRecipeByUserid(Integer userId) {
+		List<FoodRecipe> recipeListByUserId;
+		try {
+			recipeListByUserId = getRecipeListByUserId(userId);
+			//根据该用户关注的用户,获取他发表的博客
+			List<FoodRecipe> selectRecipeByPostUserId = recipeDao.selectRecipeByPostUserId(userId);
+			RecipeUtil.bianli(selectRecipeByPostUserId, recipeListByUserId);
+			List<FoodRecipe> selectAll = recipeDao.selectAll();
+			RecipeUtil.bianli(selectAll, recipeListByUserId);
+			Collections.sort(recipeListByUserId, new ComparatorOuter());
+			System.out.println(recipeListByUserId.size());
+			return recipeListByUserId;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public List<FoodRecipe> selectAll() {
+		return recipeDao.selectAll();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

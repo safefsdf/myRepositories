@@ -30,7 +30,6 @@ public class LikeCollectController {
 	public R<?> LikeOrCollectToBlog(@RequestBody LikeCollectDTO likeCollectDTO) {
 		System.out.println(likeCollectDTO.toString());
 		boolean flag = false;
-		System.out.println(likeCollectDTO.toString());
 		if(likeCollectDTO!=null) {
 			if(likeCollectDTO.getStatus() == 1) {//点赞
 				flag = like_collectService.likeToblogToRedis(likeCollectDTO);

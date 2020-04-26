@@ -24,7 +24,6 @@ import com.jiuqi.cosmos.service.FocusService;
 import com.jiuqi.cosmos.service.LikeCollectService;
 import com.jiuqi.cosmos.service.RecipeService;
 import com.jiuqi.cosmos.service.UserService;
-import com.jiuqi.cosmos.util.MD5;
 import com.jiuqi.cosmos.util.RedisUtil;
 import com.jiuqi.cosmos.util.VerifyUtil;
 
@@ -36,7 +35,7 @@ public class UserController {
 	private UserService userService;
 	
 	@Autowired
-	private RedisUtil redisService;
+	private RedisUtil<FoodRecipe> redisService;
 	
 	@Autowired
 	private FocusService focusService;
@@ -62,11 +61,13 @@ public class UserController {
 			if (user == null) {// 密码错误
 				return R.success(ResultEnum.PASSWORD_ERROR.getCode(), ResultEnum.PASSWORD_ERROR.getMsg());
 			} else {
-				//用户登录后的token信息
 				String token = user.getUserid() + user.getPhone() + System.currentTimeMillis();				
-				//使用md5算法进行加密
-				user.setToken(MD5.md5(token));
-				redisService.set(token, user, 60*5);
+				user.setToken(token);
+				redisService.set(token, user, 60*60*24*14);//token的过期时间试14天
+				List<FoodRecipe> relateRecipeByUserid = recipeService.getRelateRecipeByUserid(user.getUserid());
+				redisService.pushToList(token+"1", relateRecipeByUserid);
+				UserDTO userDto = getUserDto( user);
+				redisService.set(token+"userdto", userDto, 60*60*24*3);
 				return R.success(user, ResultEnum.SUCCESS.getCode(),"登录"+ ResultEnum.SUCCESS.getMsg());
 			}
 		} else {//用户不存在
@@ -154,20 +155,47 @@ public class UserController {
 	}
 	/**
 	 *	获取用户资料
+	 *1.根据token(token+"userdto")从redis中获取UserDto；---定时2天
+	 *2.如果为空，根据token获取该用户的数据userId，调用公共方法，初始化到redis中。
 	 * @param userid
 	 * @return
 	 */
 	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
-	public R<UserDTO> getUserInfo(int userid) {
-		System.out.println("userid: "+userid);
-		UserDTO userDto = new UserDTO();
-		User byId;
+	public R<UserDTO> getUserInfo(String token) {
+		System.out.println("token: "+token);
 		try {
-			byId = userService.getById(userid);
-			if(byId==null) {
-				return R.error(ResultEnum.USER_NOT_EXIST.getCode(), ResultEnum.USER_NOT_EXIST.getMsg());
+			Object u = redisService.get(token);
+			Object object = redisService.get(token+"userdto");
+			if(u !=null && u instanceof User) {
+				User user = (User) u;
+				if(object!=null && object instanceof UserDTO) {
+					return new R<UserDTO>(ResultEnum.SUCCESS.getCode(),ResultEnum.SUCCESS.getMsg(),(UserDTO) object);
+				}else {//时间到期
+					UserDTO userDto = getUserDto(user);
+					redisService.set(token+"userdto", userDto, 60*60*24*3);
+					return new R<UserDTO>(ResultEnum.SUCCESS.getCode(),ResultEnum.SUCCESS.getMsg(),userDto);
+				}
+			}else {
+				//跳转到登陆页面，提示当前登录已失效
+				R.error(ResultEnum.TOKEN_TIMEOUT.getCode(), ResultEnum.TOKEN_TIMEOUT.getMsg());
 			}
-			userDto.setUser(byId);
+			 
+		} catch (Exception e1) {
+			return R.error(ResultEnum.USER_NOT_EXIST.getCode(), ResultEnum.USER_NOT_EXIST.getMsg());
+		}
+		return null;
+		 
+	}
+	
+	private UserDTO getUserDto(User user){
+		if(user == null) return null;
+		UserDTO userDto = new UserDTO();
+		userDto.setUser(user);
+		getUserDTOByUid(user.getUserid(), userDto);
+		return userDto;
+	}
+	private  void getUserDTOByUid(Integer userid, UserDTO userDto) {
+		try {
 			List<User> idolList = focusService.getFocusListByFocusPostId(userid);
 			List<User> funList = focusService.getFocusListByFocusUserId(userid);
 			userDto.setIdolUserList(idolList);
@@ -191,9 +219,8 @@ public class UserController {
 			userDto.setLikeRecipeList(likeRecipeList);
 			userDto.setLikeCount(likeRecipeList.size());
 			userDto.setCollectCount(collectRecipeList.size());
-			return new R<UserDTO>(ResultEnum.SUCCESS.getCode(),ResultEnum.SUCCESS.getMsg(),userDto);
 		} catch (Exception e) {
-			return R.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
+			e.printStackTrace();
 		}
 	}
 }

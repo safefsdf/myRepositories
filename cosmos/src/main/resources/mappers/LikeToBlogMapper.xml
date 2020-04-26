@@ -67,7 +67,7 @@
 		from tb_like
 		where recipe_id = #{recipeId,jdbcType=INTEGER}
 	</select>
-	<select id="selectAllByBlog" resultMap="UserBlogResultMap" parameterType="java.lang.Integer">
+	<select id="selectUserInfoByBlog" resultMap="UserBlogResultMap" parameterType="java.lang.Integer">
 		SELECT
 			u.user_id,
 			l.recipe_id,

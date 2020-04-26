@@ -28,22 +28,34 @@ public class FocusController {
 
 	/**
 	 * 关注 ：用户 focusUserId 被 focusPostId 所关注。（此时登录者为postId,看到了用户userId的信息）
-	 * 
+	 * 点击：查询如果库中没有，则添加，如果有判断状态值：1-->0；0-->1
+	 * redis更新时间缩短，更具时效性
 	 * @param focusUserId 被关注者
 	 * @param focusPostId 关注的操作者
 	 * @return
 	 */
 	@RequestMapping("focusOn")
 	@Transactional
-	public R<FocusInfo> focusOn(int focusUserId, int focusPostId) {
+	public R<FocusInfo> focusOn(Integer focusUserId, Integer focusPostId) {
 		try {
-			FocusInfo info = new FocusInfo(focusUserId, focusPostId, 1);
-			focusRedisService.focusToRedis(focusUserId, focusPostId);
-			focusRedisService.incrementLikedCount(focusUserId);// 粉丝量+1
-			return R.success(info, 200, "success");
+			FocusInfo focusInfo = focusService.getByFocusUserIdAndFocusPostId(focusUserId, focusPostId);
+			if(focusInfo == null) {
+				FocusInfo info = new FocusInfo(focusUserId, focusPostId, 1);
+				focusRedisService.focusToRedis(focusUserId, focusPostId);
+				focusRedisService.incrementLikedCount(focusUserId);// 粉丝量+1
+				return R.success(info, 200, "success");
+			}
+			if(focusInfo.getStatus() == 0) {//修改为关注状态
+				focusRedisService.focusToRedis(focusUserId, focusPostId);
+				return new R<FocusInfo>(ResultEnum.ONFOCUS.getCode(), ResultEnum.ONFOCUS.getMsg());
+			}else {//修改为未关注状态
+				focusRedisService.unFocusToRedis(focusUserId, focusPostId);
+				new R<FocusInfo>(ResultEnum.OFFFOCUS.getCode(), ResultEnum.OFFFOCUS.getMsg());
+			}
 		} catch (Exception e) {
 			return R.success(9, "关注失败");
 		}
+		return null;
 	}
 	/**
 	 * 取消关注 用户postId不喜欢UserId了
@@ -54,7 +66,7 @@ public class FocusController {
 	 */
 	@RequestMapping("focusCancel")
 	@Transactional
-	public R<FocusInfo> focusDown(int focusUserId, int focusPostId) {
+	public R<FocusInfo> focusDown(Integer focusUserId, Integer focusPostId) {
 		FocusInfo info = new FocusInfo(focusUserId, focusPostId, 0);
 		try {
 			focusRedisService.unFocusToRedis(focusUserId, focusPostId);
@@ -70,7 +82,7 @@ public class FocusController {
 	 * @param focusUserId
 	 * @return userList的列表
 	 */
-	public R<User> getFocusfun(int focusUserId) {
+	public R<User> getFocusfun(Integer focusUserId) {
 		try {
 			List<User> userList = focusService.getFocusListByFocusUserId(focusUserId);
 			 
@@ -90,11 +102,28 @@ public class FocusController {
 	 * @return userList 我的偶像的集合
 	 */
 	@RequestMapping("/getMyIdol")
-	public R<User> getMyFocus(int focusPostId) {
+	public R<User> getMyFocus(Integer focusPostId) {
 		 
 		return R.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
 	}
 
-	
-
+	/**
+	 * 判断用户A B是否有关注关系
+	 * @param focusPostId
+	 * @return
+	 */
+	@RequestMapping("/isFocus")
+	public R<FocusInfo> getIsFocus(Integer focusUserId, Integer focusPostId) {
+		try {
+			System.out.println(focusUserId+" :  "+focusPostId);
+			FocusInfo focusInfo = focusService.getByFocusUserIdAndFocusPostId(focusUserId, focusPostId);
+			if(focusInfo!=null && focusInfo.getStatus() ==1) {
+				return R.success(ResultEnum.ONFOCUS.getCode(), ResultEnum.ONFOCUS.getMsg());
+			}
+			return R.success(ResultEnum.OFFFOCUS.getCode(), ResultEnum.OFFFOCUS.getMsg());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return R.error(ResultEnum.OPER_ERROR.getCode(), ResultEnum.OPER_ERROR.getMsg());
+	}
 }

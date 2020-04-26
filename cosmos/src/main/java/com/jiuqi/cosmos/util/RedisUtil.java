@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 @Component
-public class RedisUtil {
+public class RedisUtil <T>{
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -412,6 +412,18 @@ public class RedisUtil {
         }
     }
     // ===============================list=================================
+    
+    public boolean pushToList(String key, List<T> list) {
+    	 try {
+    		 for(T t:list) {
+    			 redisTemplate.opsForList().rightPush(key, t);
+    		 }
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+    }
+   
 
     /**
      * 获取list缓存的内容
@@ -421,9 +433,10 @@ public class RedisUtil {
      * @param end   结束 0 到 -1代表所有值
      * @return
      */
-    public List<Object> lGet(String key, long start, long end) {
+    @SuppressWarnings("unchecked")
+	public List<T> lGet(String key, long start, long end) {
         try {
-            return redisTemplate.opsForList().range(key, start, end);
+            return (List<T>) redisTemplate.opsForList().range(key, start, end);
         } catch (Exception e) {
             log.error("redis error: ", e);
             return null;
@@ -469,7 +482,7 @@ public class RedisUtil {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, Object value) {
+    public boolean lSet(String key, T value) {
         try {
             redisTemplate.opsForList().rightPush(key, value);
             return true;
@@ -487,7 +500,7 @@ public class RedisUtil {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, Object value, long time) {
+    public boolean lSet(String key, T value, long time) {
         try {
             redisTemplate.opsForList().rightPush(key, value);
             if (time > 0)
@@ -507,7 +520,7 @@ public class RedisUtil {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, List<Object> value) {
+    public boolean lSet(String key, List<T> value) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
             return true;
@@ -525,7 +538,7 @@ public class RedisUtil {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, List<Object> value, long time) {
+    public boolean lSet(String key, List<T> value, long time) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
             if (time > 0)

@@ -25,7 +25,7 @@
 
 	<update id="update"
 		parameterType="com.jiuqi.cosmos.entity.FocusInfo">
-		update user_focus set status = #{status} where id = {id}
+		update user_focus set status = #{status} and update_time = now() where id = #{id}
 	</update>
 	<select id="findByFocusUserId"
 		resultMap="BaseResultMap" 

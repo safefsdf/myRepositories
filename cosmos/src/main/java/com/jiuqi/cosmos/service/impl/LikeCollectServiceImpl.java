@@ -80,41 +80,7 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 		return flag;
 	}
 
-	public List<LikeCollectDTO> getLikedDataFromRedis(String type) {
-		String likeOrCollect = "";
-		if ("like".equalsIgnoreCase(type)) {
-			likeOrCollect = UserConstants.MAP_KEY_USER_LIKED;
-		} else if ("collect".equalsIgnoreCase(type)) {
-			likeOrCollect = UserConstants.MAP_KEY_USER_COLLECT;
-		}
-		Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(likeOrCollect, ScanOptions.NONE);
-		List<LikeCollectDTO> focusInfoList = new ArrayList<LikeCollectDTO>();
-		while (cursor.hasNext()) {
-			Map.Entry<Object, Object> entry = cursor.next();
-			String key = (String) entry.getKey();
-			Integer value = (Integer) entry.getValue();
-			// 分离出 likedUserId，likedPostId
-			Integer userId;
-			Integer recipeId;
-			try {
-				String[] split = key.split("::");
-				userId = Integer.valueOf(split[0]);
-				recipeId = Integer.valueOf(split[1]);
-				LikeCollectDTO likeOrCol = new LikeCollectDTO();
-				likeOrCol.setUserId(userId);
-				likeOrCol.setrecipeId(recipeId);
-				likeOrCol.setStatus(value);
-				likeOrCol.setType(type);
-				focusInfoList.add(likeOrCol);
-				// 存到 list 后从 Redis 中删除,因为要向mysql中持久化，redis只是暂存的一个地方
-				redisTemplate.opsForHash().delete(likeOrCollect, key);
-			} catch (NumberFormatException e) {
-				System.out.println("LikeCollectServiceImpl.getLikedDataFromRedis");
-			}
-			
-		}
-		return focusInfoList;
-	}
+	
 
 	@Override
 	@Transactional
@@ -181,5 +147,39 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 	public List<FoodRecipe> selectColListRecipeByUserId(Integer userId) {
 		return collectToBlogDao.selectColListRecipeByUserId(userId);
 	}
-
+	private List<LikeCollectDTO> getLikedDataFromRedis(String type) {
+		String likeOrCollect = "";
+		if ("like".equalsIgnoreCase(type)) {
+			likeOrCollect = UserConstants.MAP_KEY_USER_LIKED;
+		} else if ("collect".equalsIgnoreCase(type)) {
+			likeOrCollect = UserConstants.MAP_KEY_USER_COLLECT;
+		}
+		Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(likeOrCollect, ScanOptions.NONE);
+		List<LikeCollectDTO> focusInfoList = new ArrayList<LikeCollectDTO>();
+		while (cursor.hasNext()) {
+			Map.Entry<Object, Object> entry = cursor.next();
+			String key = (String) entry.getKey();
+			Integer value = (Integer) entry.getValue();
+			// 分离出 likedUserId，likedPostId
+			Integer userId;
+			Integer recipeId;
+			try {
+				String[] split = key.split("::");
+				userId = Integer.valueOf(split[0]);
+				recipeId = Integer.valueOf(split[1]);
+				LikeCollectDTO likeOrCol = new LikeCollectDTO();
+				likeOrCol.setUserId(userId);
+				likeOrCol.setrecipeId(recipeId);
+				likeOrCol.setStatus(value);
+				likeOrCol.setType(type);
+				focusInfoList.add(likeOrCol);
+				// 存到 list 后从 Redis 中删除,因为要向mysql中持久化，redis只是暂存的一个地方
+				redisTemplate.opsForHash().delete(likeOrCollect, key);
+			} catch (NumberFormatException e) {
+				System.out.println("LikeCollectServiceImpl.getLikedDataFromRedis");
+			}
+			
+		}
+		return focusInfoList;
+	}
 }
