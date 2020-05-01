@@ -1,5 +1,6 @@
 package com.jiuqi.cosmos.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,10 +9,12 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jiuqi.cosmos.constants.ResultEnum;
 import com.jiuqi.cosmos.dao.FoodStepMapper;
@@ -26,6 +29,7 @@ import com.jiuqi.cosmos.service.RecipeService;
 import com.jiuqi.cosmos.service.UserService;
 import com.jiuqi.cosmos.util.RedisUtil;
 import com.jiuqi.cosmos.util.VerifyUtil;
+import com.jiuqi.cosmos.util.picUtil;
 
 @RestController
 @RequestMapping("user")
@@ -33,10 +37,10 @@ import com.jiuqi.cosmos.util.VerifyUtil;
 public class UserController {
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private RedisUtil<FoodRecipe> redisService;
-	
+
 	@Autowired
 	private FocusService focusService;
 	@Autowired
@@ -45,6 +49,7 @@ public class UserController {
 	private RecipeService recipeService;
 	@Autowired
 	private FoodStepMapper stepService;
+
 	/**
 	 * 使用手机号和密码登录
 	 * 
@@ -54,64 +59,83 @@ public class UserController {
 	 */
 	@RequestMapping("login")
 	public R<User> login(String phone, String password) {
-		System.out.println(phone+" "+password);
+		System.out.println(phone + " " + password);
 		User user = userService.getByPhone(phone); // 根据电话查询用户
 		if (user != null) {
-			user = userService.quaryByPhoneAndPassword(phone, password); 
+			user = userService.quaryByPhoneAndPassword(phone, password);
 			if (user == null) {// 密码错误
 				return R.success(ResultEnum.PASSWORD_ERROR.getCode(), ResultEnum.PASSWORD_ERROR.getMsg());
 			} else {
-				String token = user.getUserid() + user.getPhone() + System.currentTimeMillis();				
+				String token = user.getUserId() + user.getPhone() + System.currentTimeMillis();
 				user.setToken(token);
-				redisService.set(token, user, 60*60*24*14);//token的过期时间试14天
-				List<FoodRecipe> relateRecipeByUserid = recipeService.getRelateRecipeByUserid(user.getUserid());
-				redisService.pushToList(token+"1", relateRecipeByUserid);
-				UserDTO userDto = getUserDto( user);
-				redisService.set(token+"userdto", userDto, 60*60*24*3);
-				return R.success(user, ResultEnum.SUCCESS.getCode(),"登录"+ ResultEnum.SUCCESS.getMsg());
+				redisService.set(token, user, 60 * 60 * 24 * 14);// token的过期时间试14天
+				List<FoodRecipe> relateRecipeByUserid = recipeService.getRelateRecipeByUserid(user.getUserId());
+				redisService.pushToList(token + "1", relateRecipeByUserid);
+				UserDTO userDto = getUserDto(user);
+				redisService.set(token + "userdto", userDto, 60 * 60 * 24 * 3);
+				return R.success(user, ResultEnum.SUCCESS.getCode(), "登录" + ResultEnum.SUCCESS.getMsg());
 			}
-		} else {//用户不存在
+		} else {// 用户不存在
 			return R.success(ResultEnum.USER_NOT_EXIST.getCode(), ResultEnum.USER_NOT_EXIST.getMsg());
 		}
 	}
-	
-	 
+
+	/* 获取食谱封面图 */
+	@PostMapping("/headImg")
+	public R<String> importData(MultipartFile file, HttpServletRequest req) throws IOException {
+		try {
+			String singleFileUpload = picUtil.singleFileUpload(file, "headImg");
+			System.out.println("headImg" + singleFileUpload);
+			return R.success(singleFileUpload, 200, "suc");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	@RequestMapping("Logout")
+	public R logoutAccount(String token) {
+		// 删除redis中key为token的信息，以及key为token+1，token+userdto的信息
+		try {
+			redisService.del(token, token + "1", token + "userdto");
+			return R.success(ResultEnum.SUCCESS.getCode(), "注销" + ResultEnum.SUCCESS.getMsg());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return R.error(ResultEnum.ERROR.getCode(), "注销" + ResultEnum.ERROR.getMsg());
+	}
+
 	@RequestMapping("/save")
 	public R<User> register(@RequestBody User user) {
 		System.out.println(user.toString());
-		try {
-			int res = userService.createUser(user);
-			if(res == 1) {
-				 return R.success(user, ResultEnum.SUCCESS.getCode(), "注册"+ ResultEnum.SUCCESS.getMsg()) ;
+		System.out.println(user.getUserId());
+		if (user.getUserId() == null) {// 注册
+			try {
+				int res = userService.createUser(user);
+				if (res == 1) {
+					return R.success(user, ResultEnum.SUCCESS.getCode(), "注册" + ResultEnum.SUCCESS.getMsg());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return R.error(ResultEnum.REG_ERROR.getCode(), "该用户已存在，" + ResultEnum.REG_ERROR.getMsg());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			 return R.error(ResultEnum.REG_ERROR.getCode(),  "该用户已存在，"+ResultEnum.REG_ERROR.getMsg());
+		} else {// 修改
+			try {
+				userService.updateUserinfo(user);
+				return R.success(user, ResultEnum.SUCCESS.getCode(), "信息修改" + ResultEnum.SUCCESS.getMsg());
+			} catch (Exception e) {
+				e.printStackTrace();
+				return R.error(ResultEnum.ERROR.getCode(), "信息修改" + ResultEnum.ERROR.getMsg());
+			}
 		}
 		return null;
-		
+
 	}
 
 	/**
-	 * 注销账号
-	 * @return
-	 */
-	@RequestMapping("/del")
-	public R<User> cancel(Integer userid){
-		R<User> r = new R<User>();
-		try {
-			if(userService.deleteById(userid)==1) {
-				r.setCode(1);
-				r.setMsg("delete success");
-			}
-		} catch (Exception e) {
-			r.setCode(0);
-			r.setMsg("delete fail");
-		}
-		return r;
-	}
-	/**
-	 * 	生成图片验证码
+	 * 生成图片验证码
+	 * 
 	 * @param request
 	 * @param response
 	 */
@@ -129,8 +153,10 @@ public class UserController {
 
 		}
 	}
+
 	/**
-	 *	验证码校验
+	 * 验证码校验
+	 * 
 	 * @param verifyInput
 	 * @param session
 	 * @return
@@ -138,8 +164,8 @@ public class UserController {
 	@RequestMapping(value = "/checkVerify", method = RequestMethod.GET)
 	public boolean checkVerify(String verifyInput, HttpSession session) {
 		try {
-			String str=(String) session.getAttribute(VerifyUtil.RANDOMCODEKEY);
-			 System.out.println("后端生成： "+str);
+			String str = (String) session.getAttribute(VerifyUtil.RANDOMCODEKEY);
+			System.out.println("后端生成： " + str);
 			System.out.println("前端输入： " + verifyInput);
 			if (str == null) {
 				return false;
@@ -153,48 +179,73 @@ public class UserController {
 			return false;
 		}
 	}
+
 	/**
-	 *	获取用户资料
-	 *1.根据token(token+"userdto")从redis中获取UserDto；---定时2天
-	 *2.如果为空，根据token获取该用户的数据userId，调用公共方法，初始化到redis中。
+	 * 获取用户资料 1.根据token(token+"userdto")从redis中获取UserDto；---定时2天
+	 * 2.如果为空，根据token获取该用户的数据userId，调用公共方法，初始化到redis中。
+	 * 
 	 * @param userid
 	 * @return
 	 */
 	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
 	public R<UserDTO> getUserInfo(String token) {
-		System.out.println("token: "+token);
+		System.out.println("token: " + token);
 		try {
 			Object u = redisService.get(token);
-			Object object = redisService.get(token+"userdto");
-			if(u !=null && u instanceof User) {
+			Object object = redisService.get(token + "userdto");
+			if (u != null && u instanceof User) {
 				User user = (User) u;
-				if(object!=null && object instanceof UserDTO) {
-					return new R<UserDTO>(ResultEnum.SUCCESS.getCode(),ResultEnum.SUCCESS.getMsg(),(UserDTO) object);
-				}else {//时间到期
+				if (object != null && object instanceof UserDTO) {
+					return new R<UserDTO>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), (UserDTO) object);
+				} else {// 时间到期
 					UserDTO userDto = getUserDto(user);
-					redisService.set(token+"userdto", userDto, 60*60*24*3);
-					return new R<UserDTO>(ResultEnum.SUCCESS.getCode(),ResultEnum.SUCCESS.getMsg(),userDto);
+					redisService.set(token + "userdto", userDto, 60 * 60 * 24 * 3);
+					return new R<UserDTO>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), userDto);
 				}
-			}else {
-				//跳转到登陆页面，提示当前登录已失效
+			} else {
+				// 跳转到登陆页面，提示当前登录已失效
 				R.error(ResultEnum.TOKEN_TIMEOUT.getCode(), ResultEnum.TOKEN_TIMEOUT.getMsg());
 			}
-			 
+
 		} catch (Exception e1) {
 			return R.error(ResultEnum.USER_NOT_EXIST.getCode(), ResultEnum.USER_NOT_EXIST.getMsg());
 		}
 		return null;
-		 
+
 	}
-	
-	private UserDTO getUserDto(User user){
-		if(user == null) return null;
+
+	@RequestMapping(value = "/modifyPwd", method = RequestMethod.POST)
+	public R<User> modifyUserPwd(@RequestBody User user) {
+		try {
+			User us = userService.getByPhone(user.getPhone()); // 根据电话查询用户
+			if (us != null) {
+				if (user.getAnswer().equals(us.getAnswer())) {
+					userService.modifyPwd(user);
+					us.setPassword(user.getPassword());
+					return R.success(us,ResultEnum.SUCCESS_ON_MODIFY_PWD.getCode(), ResultEnum.SUCCESS_ON_MODIFY_PWD.getMsg());
+				}else {
+					return R.error(ResultEnum.USER_PWDQUEERROR.getCode(), ResultEnum.USER_PWDQUEERROR.getMsg());
+				}
+			}else {
+				return R.error(ResultEnum.USER_NOT_EXIST.getCode(), ResultEnum.USER_NOT_EXIST.getMsg());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return R.error();
+
+	}
+
+	private UserDTO getUserDto(User user) {
+		if (user == null)
+			return null;
 		UserDTO userDto = new UserDTO();
 		userDto.setUser(user);
-		getUserDTOByUid(user.getUserid(), userDto);
+		getUserDTOByUid(user.getUserId(), userDto);
 		return userDto;
 	}
-	private  void getUserDTOByUid(Integer userid, UserDTO userDto) {
+
+	private void getUserDTOByUid(Integer userid, UserDTO userDto) {
 		try {
 			List<User> idolList = focusService.getFocusListByFocusPostId(userid);
 			List<User> funList = focusService.getFocusListByFocusUserId(userid);
@@ -203,14 +254,14 @@ public class UserController {
 			userDto.setIdolCount(idolList.size());
 			userDto.setFunCount(funList.size());
 			List<FoodRecipe> likeRecipeList = likeCollectService.selectLikeListRecipeByUserId(userid);
-			for(FoodRecipe recipe : likeRecipeList) {
+			for (FoodRecipe recipe : likeRecipeList) {
 				List<FoodStep> stepsByRecipe = stepService.selectByRecipeId(recipe.getRecipeId());
 				recipe.setRecipeSteps(stepsByRecipe);
 				recipe.setUserDto(userService.getById(recipe.getUserId()));
 			}
-			
+
 			List<FoodRecipe> collectRecipeList = likeCollectService.selectColListRecipeByUserId(userid);
-			for(FoodRecipe recipe : collectRecipeList) {
+			for (FoodRecipe recipe : collectRecipeList) {
 				List<FoodStep> stepsByRecipe = stepService.selectByRecipeId(recipe.getRecipeId());
 				recipe.setRecipeSteps(stepsByRecipe);
 				recipe.setUserDto(userService.getById(recipe.getUserId()));
@@ -223,4 +274,5 @@ public class UserController {
 			e.printStackTrace();
 		}
 	}
+
 }

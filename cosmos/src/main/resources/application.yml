@@ -1,5 +1,5 @@
 server:
-  address: localhost
+  address: 192.168.2.140
   port: 9797
   servlet:
     context-path: /

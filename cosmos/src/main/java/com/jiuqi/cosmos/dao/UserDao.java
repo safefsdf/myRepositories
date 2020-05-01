@@ -21,6 +21,8 @@ public interface UserDao {
 	 * @return
 	 */
 	int deleteByPrimaryKey(Integer userId);
+	
+	int modifyPwd(User user);
 
 	int updateByPrimaryKey(User user);
 
@@ -32,6 +34,15 @@ public interface UserDao {
 	 * @return
 	 */
 	User quaryByPhoneAndPassword(String phone, String password);
+	/**
+	 *  用于忘记密码的查询
+	 * 
+	 * @param phone
+	 * @param answer
+	 * @return
+	 */
+	User queryByPhoneAndQuestion(String phone, String answer);
+	 
 
 	/**
 	 * 根据手机查用户

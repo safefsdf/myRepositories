@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jiuqi.cosmos.dao.UserDao">
-   <resultMap id="BaseResultMap" type="com.jiuqi.cosmos.entity.User">
+    <resultMap id="BaseResultMap" type="com.jiuqi.cosmos.entity.User">
     <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="password" jdbcType="VARCHAR" property="password" />
@@ -40,16 +40,17 @@
   </insert>
    <update id="updateByPrimaryKey" parameterType="com.jiuqi.cosmos.entity.User">
     update tb_user
-    set phone = #{phone,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      answer = #{answer,jdbcType=VARCHAR},
+    set 
       nickname = #{nickname,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       headimg = #{headimg,jdbcType=VARCHAR},
-      coverimg = #{coverimg,jdbcType=VARCHAR},
-      createtime = #{createtime,jdbcType=TIMESTAMP},
       sex = #{sex,jdbcType=CHAR},
       signature = #{signature,jdbcType=LONGVARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+   <update id="modifyPwd" parameterType="com.jiuqi.cosmos.entity.User">
+    update tb_user
+    set  password = #{password,jdbcType=VARCHAR}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
 	 
@@ -140,6 +141,8 @@
 		) c ON r.classify_id = c.classify_id
 		 
 	</select>
-	
+	<select id="queryByPhoneAndQuestion" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * from tb_user where phone = #{phone,jdbcType=VARCHAR} and question = #{answer,jdbcType=VARCHAR}
+	</select>
 	
 </mapper>

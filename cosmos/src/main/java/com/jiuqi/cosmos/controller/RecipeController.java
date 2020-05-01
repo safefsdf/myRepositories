@@ -1,12 +1,18 @@
 package com.jiuqi.cosmos.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jiuqi.cosmos.constants.ResultEnum;
 import com.jiuqi.cosmos.entity.ClassifyInfo;
@@ -17,6 +23,7 @@ import com.jiuqi.cosmos.service.RecipeService;
 import com.jiuqi.cosmos.service.UserService;
 import com.jiuqi.cosmos.util.RecipeUtil;
 import com.jiuqi.cosmos.util.RedisUtil;
+import com.jiuqi.cosmos.util.picUtil;
 
 import io.netty.util.internal.StringUtil;
 
@@ -29,18 +36,34 @@ public class RecipeController {
 	RecipeService recipeService;
 
 	@Autowired
-	private RedisUtil<FoodRecipe> redisService;
+	private RedisUtil<FoodRecipe> redisRecipeService;
+	@Autowired
+	private RedisUtil<ClassifyInfo> redisClassifyService;
 	
 	@Autowired
 	private UserService userService;
 	
 	@Autowired
 	RecipeUtil recipeUtilSer;
-
+	
+	/*获取食谱封面图*/
+	@PostMapping("/coverImg")
+	public R<String> importData(MultipartFile file, HttpServletRequest req) throws IOException {
+		try {
+			String singleFileUpload = picUtil.singleFileUpload(file,"coverImages");
+			System.out.println(singleFileUpload);
+			return R.success(singleFileUpload, 200, "suc");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
 	@RequestMapping("/getre")
 	R<FoodRecipe> getRecipe() {
 		try {
-			recipeUtilSer.initRecipeAllToRedis();
+			
 			return new R<FoodRecipe>(200, "stc");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,16 +143,16 @@ public class RecipeController {
 		List<FoodRecipe> lGet = null;
 		try {
 			if (StringUtil.isNullOrEmpty(token)) {
-				lGet = redisService.lGet("notoken", 0, 9);
+				lGet = redisRecipeService.lGet("notoken", 0, 9);
 				System.out.println(lGet.size());
 				return R.success(lGet, ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
 			}
-			lGet = redisService.lGet(token + "1", 0, 100);
+			lGet = redisRecipeService.lGet(token + "1", 0, 100);
 			if (lGet == null || lGet.size() <= 0) {
-				Object u = redisService.get(token);
+				Object u = redisRecipeService.get(token);
 				if (u != null && u instanceof User) {
 					User user = (User) u;
-					List<FoodRecipe> relateRecipeByUserid = recipeService.getRelateRecipeByUserid(user.getUserid());
+					List<FoodRecipe> relateRecipeByUserid = recipeService.getRelateRecipeByUserid(user.getUserId());
 					System.out.println(relateRecipeByUserid.size());
 					return R.success(relateRecipeByUserid, ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
 				} else {
@@ -160,6 +183,29 @@ public class RecipeController {
 			e.printStackTrace();
 		}
 		return R.error(ResultEnum.ERROR.getCode(), ResultEnum.ERROR.getMsg());
+		
+	}
+
+	/*
+	 * @RequestMapping("saveToRedis") public R<?> saveToThirdLevels() {
+	 * List<ClassifyInfo> selectThirdAll = recipeService.selectThirdAll();
+	 * redisClassifyService.pushToList("classify",selectThirdAll); return
+	 * R.success(); }
+	 */
+	@RequestMapping("thirdLevels")
+	public R<ClassifyInfo> getThirdLevels() {
+		List<ClassifyInfo> lGet = redisClassifyService.lGet("classify", 0, 30);
+		System.out.println(lGet.size());
+		return R.success(lGet, ResultEnum.SUCCESS.getCode(),  ResultEnum.SUCCESS.getMsg());
+		
+	}
+	@RequestMapping("saveRecipe")
+	public R<FoodRecipe> saveRecipe(@RequestBody FoodRecipe recipe) {
+		int insert = recipeService.insert(recipe);
+		System.out.println(recipe.getRecipeId());
+		System.out.println(insert);
+		
+		return R.success(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
 		
 	}
 }

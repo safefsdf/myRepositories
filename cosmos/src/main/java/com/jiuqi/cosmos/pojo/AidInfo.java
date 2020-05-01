@@ -1,13 +1,24 @@
 package com.jiuqi.cosmos.pojo;
 
+import java.util.List;
+
 public class AidInfo {
-	private Integer LrecipeId;
+	//Integer recipeId, Integer [] firstCIdList
+	private Integer recipeId;
+	private List<Integer> firstCIdList;
 	private Integer CrecipeId;
+	
+	public List<Integer> getFirstCIdList() {
+		return firstCIdList;
+	}
+	public void setFirstCIdList(List<Integer> firstCIdList) {
+		this.firstCIdList = firstCIdList;
+	}
 	public Integer getLrecipeId() {
-		return LrecipeId;
+		return recipeId;
 	}
 	public void setLrecipeId(Integer lrecipeId) {
-		LrecipeId = lrecipeId;
+		recipeId = lrecipeId;
 	}
 	public Integer getCrecipeId() {
 		return CrecipeId;

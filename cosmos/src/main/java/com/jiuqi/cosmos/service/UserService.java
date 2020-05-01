@@ -8,7 +8,9 @@ public interface UserService {
 
 	int createUser(User user);
 
-//	 int updateUserinfo(User user);
+	 int updateUserinfo(User user);
+	 
+	 int modifyPwd(User user);
 
 	User quaryByPhoneAndPassword(String phone, String password);
 

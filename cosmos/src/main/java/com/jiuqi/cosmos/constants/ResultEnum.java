@@ -4,9 +4,11 @@ public enum ResultEnum  {
 	UNKNOWN_ERROE(-1,"未知错误"),
 	ERROR(0,"失败"),
 	SUCCESS(200,"成功"),
+	SUCCESS_ON_MODIFY_PWD(200,"修改密码成功"),
 	SUC(200,"文件上传成功"),
 	 
 	USER_NOT_EXIST(1,"用户不存在"),
+	USER_PWDQUEERROR(12,"密保问题错误"),
 	USER_IS_EXISTS(2,"用户已存在"),
 	DATA_IS_NULL(3,"数据为空"),
 	PASSWORD_ERROR(4,"密码错误"),

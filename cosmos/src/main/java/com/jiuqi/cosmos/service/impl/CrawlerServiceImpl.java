@@ -220,11 +220,18 @@ public class CrawlerServiceImpl {
 		 
 		String password = RandomUtil.getRandomPassword(10);
 		
-		User user = new User(phone, password, nickname, address, headImg, headImg,
-				null, sex, signature);
+		User user = new User();
+		user.setPhone(phone);
+		user.setPassword(password);
+		user.setNickname(nickname);
+		user.setAddress(address);
+		user.setHeadimg(headImg);
+		user.setCoverimg(headImg);
+		user.setSex(sex);
+		user.setSignature(signature);
 		int createUser = userDao.insert(user);
 		if(createUser==1) {
-			int userid = user.getUserid();
+			int userid = user.getUserId();
 			return userid;
 		}
 		return null;

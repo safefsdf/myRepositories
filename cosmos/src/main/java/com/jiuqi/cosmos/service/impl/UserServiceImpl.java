@@ -43,6 +43,16 @@ public class UserServiceImpl implements UserService {
 	public Integer deleteById(Integer userid) {
 		return userDao.deleteByPrimaryKey(userid);
 	}
+
+	@Override
+	public int updateUserinfo(User user) {
+		return userDao.updateByPrimaryKey(user);
+	}
+
+	@Override
+	public int modifyPwd(User user) {
+		return userDao.modifyPwd(user);
+	}
  
 
 }
