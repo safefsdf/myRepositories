@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuqi.cosmos.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.jiuqi.cosmos.entity.User">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="headimg" jdbcType="VARCHAR" property="headimg" />
+    <result column="coverimg" jdbcType="VARCHAR" property="coverimg" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="signature" jdbcType="LONGVARCHAR" property="signature" />
+  </resultMap>
+  <resultMap id="BaseRecipeResultMap" type="com.jiuqi.cosmos.entity.FoodRecipe">
+    <result column="recipe_id" jdbcType="INTEGER" property="recipeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="classify_id" jdbcType="INTEGER" property="classifyId" />
+    <result column="recipe_coverImg" jdbcType="VARCHAR" property="recipeCoverimg" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="recipe_title" jdbcType="LONGVARCHAR" property="recipeTitle" />
+    <result column="recipe_intro" jdbcType="LONGVARCHAR" property="recipeIntro" />
+    <result column="recipe_usage" jdbcType="LONGVARCHAR" property="recipeUsage" />
+    <result column="recipe_tips" jdbcType="LONGVARCHAR" property="recipeTips" />
+  </resultMap>
+	 
+	 <insert id="insert" parameterType="com.jiuqi.cosmos.entity.User"  useGeneratedKeys="true" keyProperty="userId">
+    insert into tb_user (user_id, phone, password, 
+      answer, nickname, address, 
+      headimg, coverimg, createtime, 
+      sex, signature
+      )
+    values (#{userId,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{answer,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{headimg,jdbcType=VARCHAR}, #{coverimg,jdbcType=VARCHAR}, now(), 
+      #{sex,jdbcType=CHAR},  #{signature,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+   <update id="updateByPrimaryKey" parameterType="com.jiuqi.cosmos.entity.User">
+    update tb_user
+    set 
+      nickname = #{nickname,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      headimg = #{headimg,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=CHAR},
+      signature = #{signature,jdbcType=LONGVARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+   <update id="modifyPwd" parameterType="com.jiuqi.cosmos.entity.User">
+    update tb_user
+    set  password = #{password,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+	 
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  
+	<!-- 根据id只查询相应的数据 -->
+	<select id="quaryByPhone" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from tb_user where phone=#{phone}
+	</select>
+	<select id="quaryByPhoneAndPassword" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from tb_user where phone = #{phone} and password = #{password}
+	</select>
+	<select id="getAll" resultMap="BaseResultMap">
+		select * from tb_user
+	</select>
+		<!-- 根据id只查询相应的数据 -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="Integer">
+		select * from tb_user where user_id=#{userId}
+	</select>
+	
+	<select id="selectFoodRecipeByUser" resultMap="BaseRecipeResultMap" parameterType="Integer">
+		SELECT
+			r.recipe_id,
+			r.user_id,
+		 r.recipe_title,
+			r.recipe_coverImg,
+			r.recipe_intro,
+			r.recipe_usage,
+			r.classify_id,
+			r.createtime,
+			r.recipe_steps,
+			r.recipe_tips
+		FROM
+			tb_food_recipe AS r
+		JOIN user_focus AS u ON u.focus_user_id = r.user_id
+		where u.focus_post_id = #{focusPostId}
+		order by r.createtime desc
+	</select>
+	
+	<select id="selectRecipeFromLike" resultMap="BaseRecipeResultMap" parameterType="Integer">
+		SELECT
+			r.recipe_id,
+			r.user_id,
+			c.classify_id,
+			r.recipe_title,
+			r.recipe_coverImg,
+			r.recipe_intro,
+			r.recipe_usage,
+			r.createtime,
+			r.recipe_steps,
+			r.recipe_tips
+		FROM
+			tb_food_recipe AS r
+		JOIN (
+			SELECT
+				classify_id
+			FROM
+				tb_like AS l
+			JOIN tb_food_recipe AS r ON l.recipe_id = r.recipe_id
+			where l.user_id = #{userId}
+		) c ON r.classify_id = c.classify_id 
+	</select>
+	
+	<select id="selectRecipeFromCollect" resultMap="BaseRecipeResultMap" parameterType="Integer">
+		 SELECT
+			r.recipe_id,
+			r.user_id,
+			c.classify_id,
+			r.recipe_title,
+			r.recipe_coverImg,
+			r.recipe_intro,
+			r.recipe_usage,
+			r.createtime,
+			r.recipe_steps,
+			r.recipe_tips
+		FROM
+			tb_food_recipe AS r
+		JOIN (
+			SELECT
+				classify_id
+			FROM
+				tb_collect AS col
+			JOIN tb_food_recipe AS r ON col.recipe_id = r.recipe_id
+			where col.user_id = #{userId}
+		) c ON r.classify_id = c.classify_id
+		 
+	</select>
+	<select id="queryByPhoneAndQuestion" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT * from tb_user where phone = #{phone,jdbcType=VARCHAR} and question = #{answer,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

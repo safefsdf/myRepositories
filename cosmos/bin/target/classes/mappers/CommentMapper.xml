@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuqi.cosmos.dao.CommentMapper">
+
+  <resultMap id="BaseResultMap" type="com.jiuqi.cosmos.entity.Comment">
+    <id column="cId" jdbcType="INTEGER" property="cid" />
+    <id column="recipe_id" jdbcType="INTEGER" property="recipeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="content2" jdbcType="VARCHAR" property="pContent" />
+    <result column="pId" jdbcType="INTEGER" property="pid" />
+    <result column="replytime" jdbcType="TIMESTAMP" property="replytime" />
+    <result column="top_id" jdbcType="INTEGER" property="topId" />
+    <result column="p_userId"  jdbcType="INTEGER" property="pUserId" />
+    <result column="replytime2"  jdbcType="INTEGER" property="pReplytime" />
+    
+    
+    
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from tb_com
+    where cId = #{cid,jdbcType=INTEGER}
+      and recipe_id = #{recipeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jiuqi.cosmos.entity.Comment">
+    insert into tb_com (cId, recipe_id, user_id, 
+      content, pId, replytime, 
+      top_id)
+    values (#{cid,jdbcType=INTEGER}, #{recipeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{content,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{replytime,jdbcType=TIMESTAMP}, 
+      #{topId,jdbcType=INTEGER})
+  </insert>
+   
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select cId, recipe_id, user_id, content, pId, replytime, top_id
+    from tb_com
+    where cId = #{cid,jdbcType=INTEGER}
+      and recipe_id = #{recipeId,jdbcType=INTEGER}
+  </select>
+  <select id="selectFirstLevel" resultMap="BaseResultMap">
+    select cId, recipe_id, user_id, content, pId, replytime, top_id
+    from tb_com
+    where pId = 0 and recipe_id =  #{recipeId,jdbcType=INTEGER}
+    order by replytime desc limit 0,10
+  </select>
+  
+   <select id="selectSecondLevel" resultMap="BaseResultMap" parameterType="com.jiuqi.cosmos.pojo.AidInfo">
+	    select c.cId, c.recipe_id, c.user_id, c.content, c.pId, c.replytime, c.top_id,
+	    c2.user_id as p_userId, c2.replytime as replytime2, c2.content as content2  
+	    from tb_com as c left join tb_com as c2 on c.pId = c2.cId
+	    where  recipe_id =  #{recipeId,jdbcType=INTEGER}
+	    <if test="firstCIdList != null" >
+        and c.top_id in
+        <foreach collection="firstCIdList" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+       </if>
+	    order by replytime desc limit 0,10
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</mapper>

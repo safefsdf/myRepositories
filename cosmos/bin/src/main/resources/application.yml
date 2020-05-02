@@ -1,0 +1,50 @@
+server:
+  address: 192.168.2.140
+  port: 9797
+  servlet:
+    context-path: /
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: com.jiuqi.cosmos.entity
+  configuration:
+    mapUnderscoreToCamelCase: true
+spring:
+  application: 
+    name: cosmos
+  redis:
+      database: 0
+      host: 39.101.186.6
+      port: 6666
+      password: 111111
+      timeout: 5000
+      blockWhenExhausted: true
+      maxWaitMillis: -1
+      maxTotal: 200
+      maxIdle: 8
+      testOnBorrow: true
+      lettuce:
+        pool:
+           max-active: 8 #最大连接数
+           max-wait: -1 #最大阻塞等待时间
+           max-idle: 8 #连接池中的最大空闲连接
+           min-idle: 0 #连接池中的最小空闲连接
+  repositories:
+    enabled:
+      true
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://39.101.186.6:3306/cosmos?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+    username: root
+    password: 111111
+    driver-class-name:  com.mysql.cj.jdbc.Driver
+  data:
+    elasticsearch:
+     cluster-name:  my-application
+     cluster-nodes: 39.101.186.6:9300
+     repositories:
+        enabled: true
+     transport-client: client-transport-sniff="false" 
+          
+    
+    
+   

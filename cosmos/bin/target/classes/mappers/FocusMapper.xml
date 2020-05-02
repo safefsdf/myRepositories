@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuqi.cosmos.dao.FocusDao">
+	<resultMap id="BaseResultMap" type="com.jiuqi.cosmos.entity.User">
+    <id column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="headimg" jdbcType="VARCHAR" property="headimg" />
+    <result column="coverimg" jdbcType="VARCHAR" property="coverimg" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="idolCount" jdbcType="INTEGER" property="focusCount" />
+     <result column="funCount" jdbcType="INTEGER" property="funCount" />
+    <result column="signature" jdbcType="LONGVARCHAR" property="signature" />
+  </resultMap>
+
+	<insert id="save"
+		parameterType="com.jiuqi.cosmos.entity.FocusInfo">
+		insert into user_focus
+		(id,focus_user_id,focus_post_id,status,create_time,update_time)
+		values(#{id},#{focusUserId},#{focusPostId},#{status},now(),now())
+	</insert>
+
+	<update id="update"
+		parameterType="com.jiuqi.cosmos.entity.FocusInfo">
+		update user_focus set status = #{status} and update_time = now() where id = #{id}
+	</update>
+	<select id="findByFocusUserId"
+		resultMap="BaseResultMap" 
+		parameterType="java.lang.Integer">
+		 SELECT
+			u.user_id as userId,
+			u.phone as phone,
+			u.nickname as nickname,
+			u.signature as signature,
+			u.address as address, 
+			u.headimg as headimg,
+			u.coverimg as coverimg,
+			u.createtime as createtime,
+			u.sex as sex 
+		FROM
+			tb_user AS u
+		LEFT JOIN user_focus AS uf ON u.user_id = uf.focus_post_id
+		WHERE
+			STATUS = 1
+		AND uf.focus_user_id = #{focusUserId}
+	</select>
+	
+	<select id="findByFocusPostId"
+		resultMap="BaseResultMap" 
+		parameterType="java.lang.Integer">
+		 SELECT
+			u.user_id as userId,
+			u.phone as phone,
+			u.nickname as nickname,
+			u.signature as signature,
+			u.address as address, 
+			u.headimg as headimg,
+			u.coverimg as coverimg,
+			u.createtime as createtime,
+			u.sex as sex 
+		FROM
+			tb_user AS u
+		LEFT JOIN user_focus AS uf ON u.user_id = uf.focus_user_id
+		WHERE
+			STATUS = 1
+		AND uf.focus_post_id = #{focusPostId}
+	</select>
+	
+	<select id="findByFocusUserIdAndLikedPostId"
+		parameterType="java.lang.Integer"
+		resultType="com.jiuqi.cosmos.entity.FocusInfo">
+		select * from user_focus where focus_user_id=#{focusUserId}
+		and focus_post_id=#{focusPostId}
+	</select>
+</mapper>

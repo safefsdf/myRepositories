@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiuqi.cosmos.dao.FoodRecipeMapper">
+  <resultMap id="BaseResultMap" type="com.jiuqi.cosmos.entity.FoodRecipe">
+    <result column="recipe_id" jdbcType="INTEGER" property="recipeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="classify_id" jdbcType="INTEGER" property="classifyId" />
+    <result column="recipe_coverImg" jdbcType="VARCHAR" property="recipeCoverimg" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="recipe_title" jdbcType="LONGVARCHAR" property="recipeTitle" />
+    <result column="recipe_intro" jdbcType="LONGVARCHAR" property="recipeIntro" />
+    <result column="recipe_usage" jdbcType="LONGVARCHAR" property="recipeUsage" />
+    <result column="recipe_tips" jdbcType="LONGVARCHAR" property="recipeTips" />
+  </resultMap>
+   <resultMap id="BaseRecipeMap" type="com.jiuqi.cosmos.pojo.AidInfo">
+    <result column="LrecipeId" jdbcType="INTEGER" property="LrecipeId" />
+    <result column="CrecipeId" jdbcType="VARCHAR" property="CrecipeId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.jiuqi.cosmos.entity.FoodRecipe" useGeneratedKeys="true" keyProperty="recipeId">
+    insert into tb_food_recipe (recipe_id, user_id, classify_id, 
+      recipe_coverImg, createtime, recipe_title, 
+      recipe_usage, recipe_tips, recipe_intro)
+    values (#{recipeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{classifyId,jdbcType=INTEGER}, 
+      #{recipeCoverimg,jdbcType=VARCHAR}, now(), #{recipeTitle,jdbcType=LONGVARCHAR}, 
+      #{recipeUsage,jdbcType=LONGVARCHAR}, #{recipeTips,jdbcType=LONGVARCHAR},  #{recipeIntro,jdbcType=LONGVARCHAR})
+  </insert>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+	    SELECT
+			*
+		FROM
+			tb_food_recipe
+		GROUP BY
+			classify_id
+		ORDER BY
+			createtime DESC
+  </select>
+  
+   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_title, recipe_usage, recipe_tips, recipe_intro 
+    from tb_food_recipe
+    where recipe_id = #{recipeId,jdbcType=INTEGER}
+  </select>
+  
+   <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_title, recipe_usage, recipe_tips, recipe_intro 
+    from tb_food_recipe
+    where user_id = #{userId,jdbcType=INTEGER}
+    order by createtime desc
+  </select>	
+  
+  <select id="selectByClassifyId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select recipe_id, user_id, classify_id, recipe_coverImg, createtime, recipe_title, recipe_usage, recipe_tips, recipe_intro 
+    from tb_food_recipe
+    where classify_id = #{classifyId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  		
+  </delete>
+  
+  <select id="selectRecipeListByOtherRecipe" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT
+		*
+	FROM
+		tb_food_recipe
+	WHERE
+		classify_id = (
+			SELECT
+				classify_id
+			FROM
+				tb_food_recipe f
+			WHERE
+				recipe_id = #{recipeId,jdbcType=INTEGER}
+		)
+  </select>
+  <select id="selectRecipeByPostUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT
+		*
+	FROM
+		tb_food_recipe f
+	WHERE
+		f.user_id IN (
+			SELECT
+				focus_user_id
+			FROM
+				user_focus
+			WHERE
+				focus_post_id = #{focusPostId,jdbcType=INTEGER}
+			AND STATUS = 1
+		)
+  </select>
+  <!-- 根据用户ID查询其关注和点赞的食谱ID -->
+  <select id="selectReciIdByUid" parameterType="java.lang.Integer" resultMap="BaseRecipeMap">
+     SELECT
+		l.recipe_id as LrecipeId,
+		c.recipe_id as CrecipeId
+	FROM
+		tb_collect c
+	LEFT JOIN tb_like l ON c.user_id = l.user_id
+	WHERE
+		c.user_id = #{userId,jdbcType=INTEGER}
+	AND c.collect_status = 1 or l.like_status = 1
+  </select>
+  
+  
+  
+  
+</mapper>
