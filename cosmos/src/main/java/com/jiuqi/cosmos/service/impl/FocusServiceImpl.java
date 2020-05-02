@@ -47,8 +47,16 @@ public class FocusServiceImpl implements FocusService {
 				focusDao.save(focusInfo);
 			} else {
 				// 有记录，需要更新
-				ul.setStatus(focusInfo.getStatus());
-				focusDao.update(ul);
+				Integer status = focusInfo.getStatus();
+				ul.setStatus(status);
+				System.out.println(ul.toString());
+				try {
+					focusDao.update(ul);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				FocusInfo ulupdate = getByFocusUserIdAndFocusPostId(focusInfo.getFocusUserId(), focusInfo.getFocusPostId());
+				System.out.println(ulupdate.toString());
 			}
 		}
 	}

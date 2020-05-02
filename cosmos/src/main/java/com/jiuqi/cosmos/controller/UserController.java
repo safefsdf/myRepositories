@@ -60,6 +60,7 @@ public class UserController {
 	@RequestMapping("login")
 	public R<User> login(String phone, String password) {
 		System.out.println(phone + " " + password);
+		
 		User user = userService.getByPhone(phone); // 根据电话查询用户
 		if (user != null) {
 			user = userService.quaryByPhoneAndPassword(phone, password);

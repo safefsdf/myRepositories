@@ -8,6 +8,9 @@ public class Comment {
     private Integer recipeId;
 
     private Integer userId;
+    private String headImg;
+    private String nickname;
+    
 
     private String content;
     private String pContent;
@@ -22,7 +25,23 @@ public class Comment {
     private Integer pUserId;
     
 
-    public Integer getCid() {
+    public String getHeadImg() {
+		return headImg;
+	}
+
+	public void setHeadImg(String headImg) {
+		this.headImg = headImg;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public Integer getCid() {
         return cid;
     }
 

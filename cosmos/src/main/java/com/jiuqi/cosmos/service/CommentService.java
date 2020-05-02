@@ -1,9 +1,10 @@
 package com.jiuqi.cosmos.service;
 
+
 import java.util.List;
 
 import com.jiuqi.cosmos.entity.Comment;
-import com.jiuqi.cosmos.pojo.AidInfo;
+import com.jiuqi.cosmos.pojo.BlogCommentDTO;
 
 public interface CommentService {
 
@@ -19,12 +20,7 @@ public interface CommentService {
 	 * @param recipeId
 	 * @return
 	 */
-	List<Comment> selectFirstLevel(Integer recipeId);
-
-	/**
-	 * @param aidInfo 定义recipeId 及 一级评论列表主键 的辅助类
-	 * @return
-	 */
-	List<Comment> selectSecondLevel(AidInfo aidInfo);
-
+//	List<Comment> selectFirstLevel(Integer recipeId);
+	 
+	public List<BlogCommentDTO> selectSecondLevel(Integer recipeId);
 }

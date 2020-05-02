@@ -20,12 +20,10 @@ public interface CommentMapper {
      * @return
      */
     List<Comment> selectFirstLevel(Integer recipeId);
-    /**
-     * 
-     * @param aidInfo 定义recipeId 及 一级评论列表主键  的辅助类
-     * @return
-     */
-    List<Comment> selectSecondLevel(AidInfo aidInfo);
+    
+    public List<Comment> selectSecondLevel(Integer commentId, Integer recipeId);
+     
+
     
 
 }

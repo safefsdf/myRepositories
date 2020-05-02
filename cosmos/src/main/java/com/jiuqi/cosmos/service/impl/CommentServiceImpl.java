@@ -11,6 +11,7 @@ import com.jiuqi.cosmos.dao.FoodRecipeMapper;
 import com.jiuqi.cosmos.dao.UserDao;
 import com.jiuqi.cosmos.entity.Comment;
 import com.jiuqi.cosmos.pojo.AidInfo;
+import com.jiuqi.cosmos.pojo.BlogCommentDTO;
 import com.jiuqi.cosmos.service.CommentService;
 
 @Service
@@ -30,21 +31,28 @@ public class CommentServiceImpl implements CommentService {
 		return commentDao.insert(record);
 	}
 
-	@Override
 	public List<Comment> selectFirstLevel(Integer recipeId) {
 		return commentDao.selectFirstLevel(recipeId);
 	}
-
 	@Override
-	public List<Comment> selectSecondLevel(AidInfo aidInfo) {
-		List<Integer> firstId = new ArrayList<Integer>();
-		List<Comment> selectFirstLevel = selectFirstLevel(aidInfo.getLrecipeId());
-		for(Comment ment:selectFirstLevel) {
-			firstId.add(ment.getCid());
+	public List<BlogCommentDTO> selectSecondLevel(Integer recipeId) {
+		try {
+			List<Comment> firsts = commentDao.selectFirstLevel(recipeId);
+			List<BlogCommentDTO> result = new ArrayList<BlogCommentDTO>();
+			for(Comment com : firsts) {
+				BlogCommentDTO dto = new BlogCommentDTO();
+				 
+				dto.setCom(com);
+				List<Comment> selectSecondLevel = commentDao.selectSecondLevel(com.getCid(), com.getRecipeId());
+				dto.setList(selectSecondLevel);
+				result.add(dto);
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		aidInfo.setFirstCIdList(firstId);
-		
-		return commentDao.selectSecondLevel(aidInfo);
+		return null;
 	}
+	 
 
 }
