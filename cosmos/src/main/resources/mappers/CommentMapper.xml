@@ -27,7 +27,7 @@
       content, pId, replytime, 
       top_id)
     values (#{cid,jdbcType=INTEGER}, #{recipeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
-      #{content,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{replytime,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, now(), 
       #{topId,jdbcType=INTEGER})
   </insert>
    

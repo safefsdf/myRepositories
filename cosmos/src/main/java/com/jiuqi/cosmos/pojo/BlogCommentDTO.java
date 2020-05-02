@@ -5,8 +5,16 @@ import java.util.List;
 import com.jiuqi.cosmos.entity.Comment;
 
 public class BlogCommentDTO {
+	private String headimg;
 	private Comment com;
 	private List<Comment> list;
+	
+	public String getHeadimg() {
+		return headimg;
+	}
+	public void setHeadimg(String headimg) {
+		this.headimg = headimg;
+	}
 	public Comment getCom() {
 		return com;
 	}
@@ -21,7 +29,7 @@ public class BlogCommentDTO {
 	}
 	@Override
 	public String toString() {
-		return "BlogCommentDTO [com=" + com + ", list=" + list + "]";
+		return "BlogCommentDTO [headimg=" + headimg + ", com=" + com + ", list=" + list + "]";
 	}
 	public BlogCommentDTO() {
 		super();

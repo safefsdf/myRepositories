@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
 			List<BlogCommentDTO> result = new ArrayList<BlogCommentDTO>();
 			for(Comment com : firsts) {
 				BlogCommentDTO dto = new BlogCommentDTO();
-				 
+				dto.setHeadimg(com.getHeadImg());
 				dto.setCom(com);
 				List<Comment> selectSecondLevel = commentDao.selectSecondLevel(com.getCid(), com.getRecipeId());
 				dto.setList(selectSecondLevel);

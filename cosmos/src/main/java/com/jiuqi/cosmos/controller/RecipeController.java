@@ -208,4 +208,16 @@ public class RecipeController {
 		return R.success(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
 		
 	}
+	@RequestMapping("getRecipeByCid")
+	public R<FoodRecipe> getRecipeByCid(Integer classifyId) {
+		try {
+			System.out.println("分类到首页面的跳转： "+classifyId);
+			List<FoodRecipe> selectByClassifyId = recipeService.selectByClassifyId(classifyId);
+			System.out.println(selectByClassifyId);
+			return R.success(selectByClassifyId,ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return R.error();
+	}
 }
