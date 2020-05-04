@@ -1,6 +1,7 @@
 package com.jiuqi.cosmos.pojo;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jiuqi.cosmos.constants.ResultEnum;
 
@@ -9,6 +10,16 @@ public class R<T> {
 	private String msg;
 	private T data;
 	private List<T> list;
+	private Map<String, Integer> map;
+	
+
+	public Map<String, Integer> getMap() {
+		return map;
+	}
+
+	public void setMap(Map<String, Integer> map) {
+		this.map = map;
+	}
 
 	public List<T> getList() {
 		return list;

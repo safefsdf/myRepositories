@@ -1,6 +1,7 @@
 package com.jiuqi.cosmos.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import com.jiuqi.cosmos.entity.CollectToBlog;
 import com.jiuqi.cosmos.entity.FoodRecipe;
 import com.jiuqi.cosmos.entity.LikeToBlog;
 import com.jiuqi.cosmos.pojo.LikeCollectDTO;
+import com.jiuqi.cosmos.pojo.LikeCollectStatusDTO;
 import com.jiuqi.cosmos.pojo.UserInfoDTO;
 import com.jiuqi.cosmos.service.LikeCollectService;
 import com.jiuqi.cosmos.util.RedisKeyUtils;
@@ -181,5 +183,20 @@ public class LikeCollectServiceImpl implements LikeCollectService {
 			
 		}
 		return focusInfoList;
+	}
+
+	@Override
+	public LikeCollectStatusDTO getStatus(Integer recipeId, Integer userId) {
+		LikeCollectStatusDTO dto = new LikeCollectStatusDTO();
+		//1获取点赞状态，like-status 获取收藏状态 collect-status
+		LikeToBlog selectByBlogAndUser = likeToBlogDao.selectByBlogAndUser(recipeId, userId);
+		CollectToBlog selectByBlogAndUser2 = collectToBlogDao.selectByBlogAndUser(recipeId, userId);
+		if(selectByBlogAndUser!=null) {
+			dto.setLikeStatus(selectByBlogAndUser.getLikeStatus());
+		}
+		if(selectByBlogAndUser2!=null) {
+			dto.setCollectStatus(selectByBlogAndUser2.getCollectStatus());
+		}
+		return dto;
 	}
 }

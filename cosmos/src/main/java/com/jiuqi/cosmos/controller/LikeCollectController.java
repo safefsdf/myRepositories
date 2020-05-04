@@ -1,6 +1,7 @@
 package com.jiuqi.cosmos.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jiuqi.cosmos.constants.ResultEnum;
 import com.jiuqi.cosmos.pojo.LikeCollectDTO;
+import com.jiuqi.cosmos.pojo.LikeCollectStatusDTO;
 import com.jiuqi.cosmos.pojo.LikeCountDTO;
 import com.jiuqi.cosmos.pojo.R;
 import com.jiuqi.cosmos.pojo.UserInfoDTO;
@@ -58,7 +60,16 @@ public class LikeCollectController {
 		return null;
 		
 	}
-	
+	@RequestMapping("getLCStatus")
+	public R<LikeCollectStatusDTO> getLikeAndCollectStatus(Integer recipeId, Integer userId){
+		try {
+			 LikeCollectStatusDTO status = like_collectService.getStatus(recipeId, userId);
+			 return R.success(status, ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return R.error();
+	}
 	
 	
 }

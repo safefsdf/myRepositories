@@ -39,5 +39,7 @@ public interface FoodRecipeMapper {
 	 * @return
 	 */
 	List<AidInfo> selectReciIdByUid(Integer userId);
+	
+	List<FoodRecipe> queryByRecipeTitleVague(String recipeTitle);
     
 }

@@ -103,7 +103,9 @@
 	AND c.collect_status = 1 or l.like_status = 1
   </select>
   
-  
+  <select id="queryByRecipeTitleVague" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select * from tb_food_recipe where recipe_title LIKE CONCAT('%', #{recipeTitle,jdbcType=VARCHAR}, '%') limit 0,20
+   </select>
   
   
 </mapper>

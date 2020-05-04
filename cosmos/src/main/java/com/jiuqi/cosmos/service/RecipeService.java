@@ -69,5 +69,6 @@ public interface RecipeService {
 	 * @return
 	 */
 	List<FoodRecipe> selectAll();
+	List<FoodRecipe> queryByRecipeTitleVague(String recipeTitle);
 
 }

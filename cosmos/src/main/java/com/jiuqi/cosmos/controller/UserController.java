@@ -73,7 +73,7 @@ public class UserController {
 				List<FoodRecipe> relateRecipeByUserid = recipeService.getRelateRecipeByUserid(user.getUserId());
 				redisService.pushToList(token + "1", relateRecipeByUserid);
 				UserDTO userDto = getUserDto(user);
-				redisService.set(token + "userdto", userDto, 60 * 60 * 24 * 3);
+				redisService.set(token + "userdto", userDto, 90);
 				return R.success(user, ResultEnum.SUCCESS.getCode(), "登录" + ResultEnum.SUCCESS.getMsg());
 			}
 		} else {// 用户不存在
@@ -194,13 +194,15 @@ public class UserController {
 		try {
 			Object u = redisService.get(token);
 			Object object = redisService.get(token + "userdto");
+			System.out.println(object);
 			if (u != null && u instanceof User) {
 				User user = (User) u;
 				if (object != null && object instanceof UserDTO) {
 					return new R<UserDTO>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), (UserDTO) object);
 				} else {// 时间到期
 					UserDTO userDto = getUserDto(user);
-					redisService.set(token + "userdto", userDto, 60 * 60 * 24 * 3);
+					redisService.set(token + "userdto", userDto, 90);
+					System.out.println(userDto);
 					return new R<UserDTO>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), userDto);
 				}
 			} else {

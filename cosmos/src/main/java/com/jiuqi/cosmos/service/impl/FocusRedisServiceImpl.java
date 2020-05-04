@@ -16,6 +16,11 @@ import com.jiuqi.cosmos.entity.FocusInfo;
 import com.jiuqi.cosmos.pojo.FocusCountDTO;
 import com.jiuqi.cosmos.service.FocusRedisService;
 import com.jiuqi.cosmos.util.RedisKeyUtils;
+/**
+ * 关注！
+ * @author hp
+ *
+ */
 
 @Service
 public class FocusRedisServiceImpl implements FocusRedisService {

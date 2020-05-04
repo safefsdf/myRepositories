@@ -143,7 +143,7 @@ public class RecipeController {
 		List<FoodRecipe> lGet = null;
 		try {
 			if (StringUtil.isNullOrEmpty(token)) {
-				lGet = redisRecipeService.lGet("notoken", 0, 9);
+				lGet = redisRecipeService.lGet("notoken", 0, 50);
 				System.out.println(lGet.size());
 				return R.success(lGet, ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
 			}
@@ -220,4 +220,20 @@ public class RecipeController {
 		}
 		return R.error();
 	}
+	@RequestMapping("onSearch")
+	public R<FoodRecipe> getRecipeByCid(String keyword) {
+		try {
+			List<FoodRecipe> queryByRecipeTitleVague = recipeService.queryByRecipeTitleVague(keyword);
+			return R.success(queryByRecipeTitleVague, ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return R.error();
+	}
+	
+	
+	
+	
+	
+	
 }

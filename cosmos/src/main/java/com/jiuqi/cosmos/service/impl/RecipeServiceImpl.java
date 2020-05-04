@@ -142,8 +142,10 @@ public class RecipeServiceImpl implements RecipeService {
 		return recipeDao.selectAll();
 	}
 	
-	
-	
+	@Override
+	public List<FoodRecipe> queryByRecipeTitleVague(String recipeTitle) {
+		return recipeDao.queryByRecipeTitleVague(recipeTitle);
+	}
 	
 	
 	

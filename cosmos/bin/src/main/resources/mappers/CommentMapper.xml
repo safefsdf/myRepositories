@@ -27,7 +27,7 @@
       content, pId, replytime, 
       top_id)
     values (#{cid,jdbcType=INTEGER}, #{recipeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
-      #{content,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, #{replytime,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, now(), 
       #{topId,jdbcType=INTEGER})
   </insert>
    
@@ -37,14 +37,48 @@
     where cId = #{cid,jdbcType=INTEGER}
       and recipe_id = #{recipeId,jdbcType=INTEGER}
   </select>
-  <select id="selectFirstLevel" resultMap="BaseResultMap">
-    select cId, recipe_id, user_id, content, pId, replytime, top_id
-    from tb_com
-    where pId = 0 and recipe_id =  #{recipeId,jdbcType=INTEGER}
-    order by replytime desc limit 0,10
+  <select id="selectFirstLevel" resultMap="BaseResultMap"  parameterType="java.lang.Integer" >
+    SELECT
+		cId,
+		recipe_id,
+		c.user_id,
+		u.headimg,
+		u.nickname,
+		content,
+		pId,
+		replytime,
+		top_id
+	FROM
+		tb_com as c 
+	JOIN tb_user  as u on c.user_id = u.user_id
+	WHERE
+		pId = 0
+	AND recipe_id = #{recipeId,jdbcType=INTEGER}
+	ORDER BY
+		replytime DESC
+  </select>
+  <select id="selectSecondLevel" resultMap="BaseResultMap"  parameterType="java.lang.Integer" >
+	  SELECT
+		  	cId,
+			recipe_id,
+			c.user_id,
+			u.headimg,
+			u.nickname,
+			content,
+			pId,
+			replytime,
+			top_id
+		FROM
+			tb_com c
+		JOIN tb_user  as u on c.user_id = u.user_id
+		WHERE
+			 pId = #{commentId,jdbcType=INTEGER} and recipe_id =  #{recipeId,jdbcType=INTEGER}
+		ORDER BY
+			replytime DESC
+	
   </select>
   
-   <select id="selectSecondLevel" resultMap="BaseResultMap" parameterType="com.jiuqi.cosmos.pojo.AidInfo">
+   <!-- <select id="selectSecondLevel" resultMap="BaseResultMap" parameterType="com.jiuqi.cosmos.pojo.AidInfo">
 	    select c.cId, c.recipe_id, c.user_id, c.content, c.pId, c.replytime, c.top_id,
 	    c2.user_id as p_userId, c2.replytime as replytime2, c2.content as content2  
 	    from tb_com as c left join tb_com as c2 on c.pId = c2.cId
@@ -56,7 +90,7 @@
         </foreach>
        </if>
 	    order by replytime desc limit 0,10
-  </select>
+  </select> -->
   
   
   

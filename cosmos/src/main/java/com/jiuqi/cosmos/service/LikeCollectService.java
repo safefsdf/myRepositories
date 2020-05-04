@@ -1,9 +1,11 @@
 package com.jiuqi.cosmos.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jiuqi.cosmos.entity.FoodRecipe;
 import com.jiuqi.cosmos.pojo.LikeCollectDTO;
+import com.jiuqi.cosmos.pojo.LikeCollectStatusDTO;
 import com.jiuqi.cosmos.pojo.UserInfoDTO;
 
 public interface LikeCollectService {
@@ -52,4 +54,6 @@ public interface LikeCollectService {
 
 	 List<FoodRecipe> selectLikeListRecipeByUserId(Integer userId);
 	 List<FoodRecipe> selectColListRecipeByUserId(Integer userId);
+	 
+	 public LikeCollectStatusDTO getStatus(Integer recipeId, Integer userId);
 }
