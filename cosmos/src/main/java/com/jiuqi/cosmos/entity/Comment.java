@@ -120,5 +120,13 @@ public class Comment {
 	public void setpUserId(Integer pUserId) {
 		this.pUserId = pUserId;
 	}
+
+	@Override
+	public String toString() {
+		return "Comment [cid=" + cid + ", recipeId=" + recipeId + ", userId=" + userId + ", headImg=" + headImg
+				+ ", nickname=" + nickname + ", content=" + content + ", pContent=" + pContent + ", pid=" + pid
+				+ ", replytime=" + replytime + ", pReplytime=" + pReplytime + ", topId=" + topId + ", pUserId="
+				+ pUserId + "]";
+	}
     
 }

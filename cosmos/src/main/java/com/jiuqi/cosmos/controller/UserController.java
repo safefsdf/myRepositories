@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.jiuqi.cosmos.constants.ResultEnum;
 import com.jiuqi.cosmos.dao.FoodStepMapper;
+import com.jiuqi.cosmos.dao.UserDao;
 import com.jiuqi.cosmos.entity.FoodRecipe;
 import com.jiuqi.cosmos.entity.FoodStep;
 import com.jiuqi.cosmos.entity.User;
@@ -216,7 +217,39 @@ public class UserController {
 		return null;
 
 	}
+	/**
+	 * 根据主键查询用户信息
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping(value = "/getInfoByUid", method = RequestMethod.GET)
+	public R<UserDTO> getUserInfoByUid(Integer userId) {
+		System.out.println("userId: " + userId);
+		try {
+			User u = userService.getById(userId);
+			System.out.println(u);
+			if (u != null ) {
+					String keyToken = u.getPhone()+u.getAnswer()+"userdto";
+					Object object = redisService.get(keyToken);
+					if(object!=null && object instanceof UserDTO) {
+						return new R<UserDTO>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), (UserDTO)object);
+					}
+					UserDTO userDto = getUserDto(u);
+					redisService.set(keyToken, userDto, 90);
+					System.out.println(userDto);
+					return new R<UserDTO>(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg(), userDto);
+				
+			} else {
+				// 跳转到登陆页面，提示当前登录已失效
+				R.error(ResultEnum.TOKEN_TIMEOUT.getCode(), ResultEnum.TOKEN_TIMEOUT.getMsg());
+			}
 
+		} catch (Exception e1) {
+			return R.error(ResultEnum.USER_NOT_EXIST.getCode(), ResultEnum.USER_NOT_EXIST.getMsg());
+		}
+		return null;
+
+	}
 	@RequestMapping(value = "/modifyPwd", method = RequestMethod.POST)
 	public R<User> modifyUserPwd(@RequestBody User user) {
 		try {

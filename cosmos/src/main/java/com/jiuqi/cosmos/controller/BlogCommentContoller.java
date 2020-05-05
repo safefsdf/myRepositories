@@ -34,6 +34,7 @@ public class BlogCommentContoller {
 	}
 	@RequestMapping("createComment")
 	public R<BlogCommentDTO> createComment(@RequestBody Comment comment){
+		System.out.println(comment.toString());
 		try {
 			int insert = commentService.insert(comment);
 			return R.success();

@@ -23,12 +23,9 @@
       and recipe_id = #{recipeId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jiuqi.cosmos.entity.Comment">
-    insert into tb_com (cId, recipe_id, user_id, 
-      content, pId, replytime, 
-      top_id)
+    insert into tb_com (cId, recipe_id, user_id, content, pId, replytime, top_id)
     values (#{cid,jdbcType=INTEGER}, #{recipeId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
-      #{content,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, now(), 
-      #{topId,jdbcType=INTEGER})
+      #{content,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, now(), #{topId,jdbcType=INTEGER})
   </insert>
    
   <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
