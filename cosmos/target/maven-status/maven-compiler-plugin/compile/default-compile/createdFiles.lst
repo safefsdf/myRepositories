@@ -4,7 +4,6 @@ com\jiuqi\cosmos\config\MyWebMvcConfigurer.class
 com\jiuqi\cosmos\util\GuidUtils.class
 com\jiuqi\cosmos\controller\FocusController.class
 com\jiuqi\cosmos\config\SocketConfig.class
-com\jiuqi\cosmos\service\impl\BlogCommentServiceImpl.class
 com\jiuqi\cosmos\service\impl\WebSocketServiceImpl.class
 com\jiuqi\cosmos\util\picUtil.class
 com\jiuqi\cosmos\dao\CommentMapper.class
@@ -16,7 +15,6 @@ com\jiuqi\cosmos\pojo\OutMessage.class
 com\jiuqi\cosmos\listener\SessionUnsubscribeEventListener.class
 com\jiuqi\cosmos\entity\FoodStep.class
 com\jiuqi\cosmos\dao\FocusDao.class
-com\jiuqi\cosmos\elasticSearch\NoticeRepository.class
 com\jiuqi\cosmos\entity\BlogComment.class
 com\jiuqi\cosmos\inteceper\SocketChannelIntecepter$1.class
 com\jiuqi\cosmos\config\SimpleCORSFilter.class
@@ -49,20 +47,18 @@ com\jiuqi\cosmos\service\FocusRedisService.class
 com\jiuqi\cosmos\dao\FoodRecipeMapper.class
 com\jiuqi\cosmos\controller\UserController.class
 com\jiuqi\cosmos\service\FocusService.class
-com\jiuqi\cosmos\elasticSearch\NoticeController.class
 com\jiuqi\cosmos\controller\ClawerController.class
 com\jiuqi\cosmos\controller\RecipeController.class
 com\jiuqi\cosmos\pojo\UserDTO.class
 com\jiuqi\cosmos\service\LikeCollectService.class
 com\jiuqi\cosmos\service\UserService.class
 com\jiuqi\cosmos\controller\BlogCommentContoller.class
-com\jiuqi\cosmos\elasticSearch\Notice.class
 com\jiuqi\cosmos\entity\ClassifyInfo.class
 com\jiuqi\cosmos\entity\LikeToBlog.class
-com\jiuqi\cosmos\service\BlogCommentService.class
 com\jiuqi\cosmos\pojo\R.class
 com\jiuqi\cosmos\task\FocusTask.class
 com\jiuqi\cosmos\dao\LikeToBlogMapper.class
+com\jiuqi\cosmos\pojo\LikeCollectStatusDTO.class
 com\jiuqi\cosmos\util\RecipeUtil.class
 com\jiuqi\cosmos\dao\FoodStepMapper.class
 com\jiuqi\cosmos\service\impl\FocusRedisServiceImpl.class
@@ -79,7 +75,6 @@ com\jiuqi\cosmos\controller\LikeCollectController.class
 com\jiuqi\cosmos\service\impl\CommentServiceImpl.class
 com\jiuqi\cosmos\pojo\FocusCountDTO.class
 com\jiuqi\cosmos\config\RedisConfig.class
-com\jiuqi\cosmos\dao\BlogCommentMapper.class
 com\jiuqi\cosmos\dao\CollectToBlogMapper.class
 com\jiuqi\cosmos\listener\SessionDisconnectEventListener.class
 com\jiuqi\cosmos\inteceper\SocketChannelIntecepter.class

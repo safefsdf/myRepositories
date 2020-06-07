@@ -28,11 +28,11 @@ public class FocusController {
 
 	/**
 	 * 关注 ：用户 focusUserId 被 focusPostId 所关注。（此时登录者为postId,看到了用户userId的信息）
-	 * 点击：查询如果库中没有，则添加，如果有判断状态值：1-->0；0-->1
+	 * 点击：查询如果库中没有，则添加，如果有判断状态值：1--0；0--1
 	 * redis更新时间缩短，更具时效性
 	 * @param focusUserId 被关注者
 	 * @param focusPostId 关注的操作者
-	 * @return
+	 * @return 关注是否成功的信息
 	 */
 	@RequestMapping("focusOn")
 	@Transactional
@@ -62,7 +62,7 @@ public class FocusController {
 	 * 
 	 * @param focusUserId
 	 * @param focusPostId
-	 * @return
+	 * @return 取消关注是否成功的信息
 	 */
 	@RequestMapping("focusCancel")
 	@Transactional
@@ -73,7 +73,7 @@ public class FocusController {
 			focusRedisService.decrementLikedCount(focusUserId);
 			return R.success(info, 200, "取消关注成功");
 		} catch (Exception e) {
-			return R.error(9, "关注失败");
+			return R.error(9, "取消关注失败");
 		}
 	}
 
@@ -109,8 +109,9 @@ public class FocusController {
 
 	/**
 	 * 判断用户A B是否有关注关系
+	 * @param focusUserId
 	 * @param focusPostId
-	 * @return
+	 * @return 关注的信息
 	 */
 	@RequestMapping("/isFocus")
 	public R<FocusInfo> getIsFocus(Integer focusUserId, Integer focusPostId) {

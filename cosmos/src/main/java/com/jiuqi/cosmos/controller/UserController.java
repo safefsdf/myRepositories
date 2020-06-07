@@ -116,6 +116,7 @@ public class UserController {
 			try {
 				int res = userService.createUser(user);
 				if (res == 1) {
+					user.setToken(user.getUserId() + user.getPhone() + System.currentTimeMillis());
 					return R.success(user, ResultEnum.SUCCESS.getCode(), "注册" + ResultEnum.SUCCESS.getMsg());
 				}
 			} catch (Exception e) {
@@ -125,6 +126,9 @@ public class UserController {
 		} else {// 修改
 			try {
 				userService.updateUserinfo(user);
+				String keyToken = user.getPhone()+user.getAnswer()+"userdto";
+				UserDTO userDto = getUserDto(user);
+				redisService.set(keyToken, userDto, 90);
 				return R.success(user, ResultEnum.SUCCESS.getCode(), "信息修改" + ResultEnum.SUCCESS.getMsg());
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -137,12 +141,11 @@ public class UserController {
 
 	/**
 	 * 生成图片验证码
-	 * 
 	 * @param request
 	 * @param response
 	 */
 	@RequestMapping(value = "/getVerify")
-	public void getVerify(HttpServletRequest request, HttpServletResponse response) {
+	public synchronized void getVerify(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			response.setContentType("image/jpeg");// 设置相应类型,告诉浏览器输出的内容为图片
 			response.setHeader("Pragma", "No-cache");// 设置响应头信息，告诉浏览器不要缓存此内容
@@ -256,8 +259,11 @@ public class UserController {
 			User us = userService.getByPhone(user.getPhone()); // 根据电话查询用户
 			if (us != null) {
 				if (user.getAnswer().equals(us.getAnswer())) {
+					user.setUserId(us.getUserId());
 					userService.modifyPwd(user);
 					us.setPassword(user.getPassword());
+					String token = user.getToken();
+					redisService.set(token, user, 60 * 60 * 24 * 14);
 					return R.success(us,ResultEnum.SUCCESS_ON_MODIFY_PWD.getCode(), ResultEnum.SUCCESS_ON_MODIFY_PWD.getMsg());
 				}else {
 					return R.error(ResultEnum.USER_PWDQUEERROR.getCode(), ResultEnum.USER_PWDQUEERROR.getMsg());

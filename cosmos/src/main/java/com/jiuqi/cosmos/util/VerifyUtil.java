@@ -46,32 +46,23 @@ public class VerifyUtil {
      */
     public synchronized void getRandcode(HttpServletRequest request, HttpServletResponse response) {
        HttpSession session = request.getSession();
-        // BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
         Graphics g = image.getGraphics();// 产生Image对象的Graphics对象,改对象可以在图像上进行各种绘制操作
         g.fillRect(0, 0, width, height);//图片大小
         g.setFont(new Font("Times New Roman", Font.ROMAN_BASELINE, 18));//字体大小
         g.setColor(getRandColor(110, 133));//字体颜色
-        // 绘制干扰线
         for (int i = 0; i <= lineSize; i++) {
             drowLine(g);
         }
-        // 绘制随机字符
         String randomString = "";
         for (int i = 1; i <= stringNum; i++) {
             randomString = drowString(g, randomString, i);
         }
-        //将生成的随机字符串保存到session中
         session.removeAttribute(RANDOMCODEKEY);
         session.setAttribute(RANDOMCODEKEY, randomString);
-        //th.set(randomString);
-        
-     //   System.out.println(session.getAttribute(RANDOMCODEKEY));
-        //设置失效时间1分钟
         session.setMaxInactiveInterval(6000);
         g.dispose();
         try {
-            // 将内存中的图片通过流形式输出到客户端
             ImageIO.write(image, "JPEG", response.getOutputStream());
         } catch (Exception e) {
         }

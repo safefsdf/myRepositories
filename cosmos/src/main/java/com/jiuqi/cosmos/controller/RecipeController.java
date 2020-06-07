@@ -59,7 +59,10 @@ public class RecipeController {
 		return null;
 		
 	}
-	
+	/**
+	 * 测试url
+	 * @return
+	 */
 	@RequestMapping("/getre")
 	R<FoodRecipe> getRecipe() {
 		try {
@@ -164,10 +167,13 @@ public class RecipeController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return R.error();
 
 	}
-
+	/**
+	 * 轮播图的四个食谱主键
+	 * @return
+	 */
 	@RequestMapping("/slide")
 	public R<FoodRecipe> getSlideInfo(){
 		List<FoodRecipe> list = null;
@@ -186,11 +192,9 @@ public class RecipeController {
 		
 	}
 
-	/*
-	 * @RequestMapping("saveToRedis") public R<?> saveToThirdLevels() {
-	 * List<ClassifyInfo> selectThirdAll = recipeService.selectThirdAll();
-	 * redisClassifyService.pushToList("classify",selectThirdAll); return
-	 * R.success(); }
+	/**
+	 * 
+	 * @return
 	 */
 	@RequestMapping("thirdLevels")
 	public R<ClassifyInfo> getThirdLevels() {
@@ -199,13 +203,22 @@ public class RecipeController {
 		return R.success(lGet, ResultEnum.SUCCESS.getCode(),  ResultEnum.SUCCESS.getMsg());
 		
 	}
+	/**
+	 * 创建食谱
+	 * @param recipe
+	 * @return
+	 */
 	@RequestMapping("saveRecipe")
 	public R<FoodRecipe> saveRecipe(@RequestBody FoodRecipe recipe) {
-		int insert = recipeService.insert(recipe);
-		System.out.println(recipe.getRecipeId());
-		System.out.println(insert);
-		
-		return R.success(ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
+		int insert;
+		try {
+			insert = recipeService.insert(recipe);
+			System.out.println(recipe.getRecipeId());
+			return R.success(recipe, ResultEnum.SUCCESS.getCode(), ResultEnum.SUCCESS.getMsg());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return R.error();
 		
 	}
 	@RequestMapping("getRecipeByCid")

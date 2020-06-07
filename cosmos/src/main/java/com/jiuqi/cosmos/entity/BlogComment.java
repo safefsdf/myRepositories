@@ -5,20 +5,12 @@ import java.util.List;
 
 public class BlogComment {
     private Integer blogCommentId;
-
     private Integer userId;
-
     private Integer recipeId;
-
     private Integer blogCommentPid;
-
     private Date createTime;
-
     private String content;
-    
     private List<BlogComment> child;
-    
-
     public BlogComment() {
 		super();
 		// TODO Auto-generated constructor stub

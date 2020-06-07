@@ -1,8 +1,9 @@
 server:
-  address: 192.168.2.140
+  address: 192.168.42.1
   port: 9797
   servlet:
     context-path: /
+    
 mybatis:
   mapper-locations: classpath:mappers/*.xml
   type-aliases-package: com.jiuqi.cosmos.entity
@@ -31,6 +32,8 @@ spring:
   repositories:
     enabled:
       true
+  profiles: 
+    active: dev
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     url: jdbc:mysql://39.101.186.6:3306/cosmos?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
@@ -44,7 +47,11 @@ spring:
      repositories:
         enabled: true
      transport-client: client-transport-sniff="false" 
-          
+uploadFile:
+  resourceHandler: /coverImages/**   
+  linuxResourceHandler: /coverImg/**   
+  location: D:\\files\\notePad\\images\\   
+  linuxLocation: /root/Image 
     
     
    

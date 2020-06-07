@@ -10,8 +10,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @MapperScan("com.jiuqi.cosmos.dao")
 public class CosmosApplication {
 
+
 	public static void main(String[] args) {
-		   System.setProperty("es.set.netty.runtime.available.processors", "false");
+		System.setProperty("es.set.netty.runtime.available.processors", "false");
 		SpringApplication.run(CosmosApplication.class, args);
 	}
 

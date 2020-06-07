@@ -17,13 +17,9 @@ import org.springframework.util.CollectionUtils;
 
 @Component
 public class RedisUtil <T>{
-	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-	
 	@Autowired
     private  RedisTemplate<String, Object> redisTemplate;
-  
-
     /**
      * 指定缓存失效时间
      *
